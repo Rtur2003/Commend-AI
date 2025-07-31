@@ -5,7 +5,7 @@
 
 > YouTube için yapay zeka destekli, stil sahibi yorumlar üreten ve bu yorumları sizin adınıza gönderen kişisel bir web uygulaması.
 
-*(Bu alana uygulamanızın kendi ekran görüntüsünü ekleyebilirsiniz.)*
+
 
 ## ✨ Temel Özellikler
 
