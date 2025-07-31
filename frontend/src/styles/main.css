@@ -1,13 +1,70 @@
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #121212; color: #e0e0e0; }
-.container { max-width: 700px; margin: 40px auto; padding: 20px; text-align: center; }
-header h1 { font-size: 2.5rem; color: #18D2BB; }
-.backend-status { font-size: 0.9rem; color: #888; margin-top: -15px; margin-bottom: 40px; }
+/* Basic Reset and Font */
+:root {
+  --primary-color: #18D2BB;
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-color: #e0e0e0;
+  --label-color: #aaa;
+  --border-color: #444;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px 40px;
+  text-align: center;
+  background-color: var(--surface-color);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+header h1 {
+  font-size: 2.8rem;
+  color: var(--primary-color);
+  letter-spacing: 2px;
+}
+
+.status-message {
+  font-size: 0.9rem;
+  color: var(--label-color);
+  min-height: 20px;
+  margin-bottom: 40px;
+  transition: color 0.3s ease;
+}
+
+/* Form Styling */
 .comment-form { display: flex; flex-direction: column; gap: 20px; }
 .form-group { text-align: left; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
-.form-group input, .form-group select { width: 100%; box-sizing: border-box; padding: 12px; border-radius: 8px; border: 1px solid #444; background-color: #2a2a2a; color: #e0e0e0; font-size: 1rem; }
-button[type="submit"] { padding: 15px; border: none; border-radius: 8px; background-color: #18D2BB; color: #121212; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--label-color); }
+.form-group input, .form-group select { width: 100%; box-sizing: border-box; padding: 12px; border-radius: 8px; border: 2px solid var(--border-color); background-color: #2a2a2a; color: var(--text-color); font-size: 1rem; transition: border-color 0.3s ease; }
+.form-group input:focus, .form-group select:focus { border-color: var(--primary-color); outline: none; }
+button[type="submit"] { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border: none; border-radius: 8px; background-color: var(--primary-color); color: #121212; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
 button[type="submit"]:hover { background-color: #14a893; }
 button:disabled { background-color: #555; cursor: not-allowed; }
-.result-area { margin-top: 30px; }
-.result-area textarea { width: 100%; box-sizing: border-box; height: 150px; padding: 12px; border-radius: 8px; border: 1px solid #444; background-color: #1e1e1e; color: #e0e0e0; font-size: 1rem; resize: vertical; }
+
+/* Result Area */
+.result-area { margin-top: 30px; text-align: left; }
+.result-area-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.result-area-header h3 { margin: 0; color: var(--label-color); }
+.result-area textarea { width: 100%; box-sizing: border-box; min-height: 180px; padding: 12px; border-radius: 8px; border: 2px solid var(--border-color); background-color: var(--background-color); color: var(--text-color); font-size: 1rem; resize: vertical; line-height: 1.6; }
+.action-buttons { margin-top: 10px; display: flex; gap: 10px; }
+.post-button, .copy-button { padding: 10px 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+.post-button { background-color: var(--primary-color); color: #121212; }
+.post-button:hover { background-color: #14a893; }
+.copy-button { background-color: #333; color: var(--text-color); }
+.copy-button:hover { background-color: #444; }
+
+/* Spinner Animation */
+.spinner { width: 20px; height: 20px; border: 3px solid rgba(0, 0, 0, 0.3); border-radius: 50%; border-top-color: #121212; animation: spin 1s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

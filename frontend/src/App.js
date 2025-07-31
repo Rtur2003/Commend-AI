@@ -1,102 +1,115 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import './styles/main.css'; // Stil dosyamızı import ediyoruz
+import './styles/main.css';
+
+// Yükleme animasyonu için basit bir component
+const Spinner = () => <div className="spinner"></div>;
 
 function App() {
-  // State for the backend connection message
-  const [backendMessage, setBackendMessage] = useState("Connecting to backend...");
-
-  // States for our form inputs
   const [videoUrl, setVideoUrl] = useState('');
-  const [commentStyle, setCommentStyle] = useState('friendly_peer');
-
-  // State for the generated comment and loading status
+  const [language, setLanguage] = useState('Turkish');
   const [generatedComment, setGeneratedComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // useEffect for the initial backend connection test
-  useEffect(() => {
-    axios.get('http://127.0.0.1:5000/api/test')
-      .then(response => {
-        setBackendMessage(response.data.message);
-      })
-      .catch(error => {
-        console.error("Error connecting to backend!", error);
-        setBackendMessage("Error: Could not connect to backend.");
-      });
-  }, []);
+  const [isPosting, setIsPosting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('Ready to generate a new comment.');
 
   const handleGenerateComment = (e) => {
-    e.preventDefault(); 
-    setIsLoading(true); // Yükleme durumunu başlat
-    setGeneratedComment(''); // Eski yorumu temizle
+    e.preventDefault();
+    setIsLoading(true);
+    setGeneratedComment('');
+    setStatusMessage('🧠 AI is thinking... Please wait.');
 
-    // Backend'e POST isteği gönderiyoruz
     axios.post('http://127.0.0.1:5000/api/generate_comment', {
       video_url: videoUrl,
-      comment_style: commentStyle
+      language: language,
+      comment_style: 'default' // Şimdilik stil sabit
     })
     .then(response => {
-      // Başarılı olursa, gelen yorumu state'e kaydet
       setGeneratedComment(response.data.generated_text);
+      setStatusMessage('✅ Comment generated! You can edit it before posting.');
     })
     .catch(error => {
-      // Hata olursa, hatayı göster
-      console.error("Yorum üretilirken hata oluştu!", error);
-      setGeneratedComment("Bir hata oluştu. Lütfen backend terminalini kontrol edin.");
+      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      setStatusMessage(`❌ Error: ${errorMessage}`);
     })
     .finally(() => {
-      // Her durumda yükleme durumunu bitir
       setIsLoading(false);
     });
+  };
+
+  const handlePostComment = () => {
+    if (!generatedComment.trim()) {
+      alert("Cannot post an empty comment!");
+      return;
+    }
+    setIsPosting(true);
+    setStatusMessage('🚀 Posting comment to YouTube...');
+
+    axios.post('http://127.0.0.1:5000/api/post_comment', {
+      video_url: videoUrl,
+      comment_text: generatedComment
+    })
+    .then(response => {
+      alert('Yorum başarıyla gönderildi!');
+      setStatusMessage('✅ Comment posted successfully! Ready for the next one.');
+      setGeneratedComment('');
+    })
+    .catch(error => {
+      const errorMessage = error.response?.data?.message || "An unknown error occurred.";
+      alert(`Error: Could not post comment! ${errorMessage}`);
+      setStatusMessage(`❌ Failed to post comment. Please check the backend console.`);
+    })
+    .finally(() => {
+      setIsPosting(false);
+    });
+  };
+  
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedComment);
+    setStatusMessage('📋 Copied to clipboard!');
   };
 
   return (
     <div className="container">
       <header>
         <h1>CommendAI</h1>
-        <p className="backend-status">{backendMessage}</p>
+        <p className="status-message">{statusMessage}</p>
       </header>
 
       <main>
         <form onSubmit={handleGenerateComment} className="comment-form">
           <div className="form-group">
             <label htmlFor="videoUrl">YouTube Video URL</label>
-            <input
-              type="url"
-              id="videoUrl"
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="https://www.youtube.com/watch?v=..."
-              required
-            />
+            <input type="url" id="videoUrl" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." required />
           </div>
-
           <div className="form-group">
-            <label htmlFor="commentStyle">Comment Style</label>
-            <select
-              id="commentStyle"
-              value={commentStyle}
-              onChange={(e) => setCommentStyle(e.target.value)}
-            >
-              <option value="friendly_peer">Friendly Peer</option>
-              <option value="respectful_analyst">Respectful Analyst</option>
-              <option value="visionary_fan">Visionary Fan</option>
+            <label htmlFor="language">Comment Language</label>
+            <select id="language" value={language} onChange={(e) => setLanguage(e.target.value)}>
+              <option value="Turkish">Türkçe</option>
+              <option value="English">English</option>
+              <option value="Russian">Русский</option>
             </select>
           </div>
-
-          <button type="submit" disabled={isLoading}>
+          <button type="submit" disabled={isLoading || isPosting}>
+            {isLoading && <Spinner />}
             {isLoading ? 'Generating...' : 'Generate Comment'}
           </button>
         </form>
 
-        <div className="result-area">
-          <textarea
-            value={generatedComment}
-            readOnly
-            placeholder="Generated comment will appear here..."
-          />
-        </div>
+        {generatedComment && (
+          <div className="result-area">
+            <div className="result-area-header">
+              <h3>Generated Comment</h3>
+            </div>
+            <textarea value={generatedComment} onChange={(e) => setGeneratedComment(e.target.value)} />
+            <div className="action-buttons">
+              <button onClick={handlePostComment} disabled={isPosting || isLoading} className="post-button">
+                {isPosting ? 'Posting...' : 'Post to YouTube'}
+              </button>
+              <button onClick={copyToClipboard} className="copy-button">Copy Text</button>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

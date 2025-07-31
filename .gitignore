@@ -1,26 +1,36 @@
-# İşletim sistemi ve IDE'ler tarafından oluşturulan dosyalar
+# ### HASSAS BİLGİLER - SENSITIVE INFO ###
+# Bu dosyalar ASLA Git'e yüklenmemelidir. API anahtarları ve kullanıcı kimlik bilgilerini içerir.
+# These files MUST NEVER be uploaded to Git. They contain API keys and user credentials.
+backend/.env
+backend/token.json
+backend/client_secret.json
+
+# ### BAĞIMLILIK KLASÖRLERİ - DEPENDENCY FOLDERS ###
+# Bu klasörler `npm install` ve `pip install` komutlarıyla yeniden oluşturulabilir.
+# These folders can be recreated with `npm install` and `pip install`.
+frontend/node_modules/
+backend/venv/
+
+# ### OTOMATİK OLUŞTURULAN DOSYALAR - AUTO-GENERATED FILES ###
+# Derleme çıktıları, cache dosyaları vb.
+# Build outputs, cache files, etc.
+frontend/build/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+
+# ### İŞLETİM SİSTEMİ & IDE DOSYALARI - OS & IDE FILES ###
+# Kişisel ayar dosyaları.
+# Personal settings files.
 .DS_Store
 .vscode/
 .idea/
 *.suo
 *.user
-
-# Python / Backend'e özel dosyalar
-backend/venv/
-backend/__pycache__/
-*.pyc
-*.pyo
-*.pyd
-backend/.env
-
-# Node.js / Frontend'e özel dosyalar
-frontend/node_modules/
-frontend/build/
-.npm
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Geçici dosyalar
 *.tmp
 *.swp
