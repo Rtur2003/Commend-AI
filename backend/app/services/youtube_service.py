@@ -90,3 +90,28 @@ def post_youtube_comment(video_id, comment_text):
     except Exception as e:
         print(f"An error occurred while posting comment: {e}")
         return None, "An error occurred while posting the comment."
+        
+def get_video_comments(video_id, max_results=10):
+    """Belirtilen video ID'sine ait ilk yorumları çeker."""
+    try:
+        youtube = get_authenticated_service()
+        request = youtube.commentThreads().list(
+            part="snippet",
+            videoId=video_id,
+            maxResults=max_results,
+            order="relevance"  # Alternatif: 'time'
+        )
+        response = request.execute()
+
+        comments = []
+        for item in response.get('items', []):
+            top_comment = item['snippet']['topLevelComment']['snippet']
+            comments.append({
+                'author': top_comment.get('authorDisplayName'),
+                'text': top_comment.get('textDisplay')
+            })
+
+        return comments, None
+    except Exception as e:
+        print(f"Yorumlar alınırken hata oluştu: {e}")
+        return None, "Yorumlar alınırken hata oluştu."

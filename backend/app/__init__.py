@@ -23,13 +23,14 @@ def create_app(config_class=Config):
 
     with app.app_context():
         # Rota ve modelleri import et
-        from .models import user, comment,ad 
-        from .routes import comment_routes
+        from .models import user, comment, ad 
+        from .routes import comment_routes, admin_routes  # admin_routes'u import et
 
         # Veritabanı tablolarını oluştur
         db.create_all()
 
         # Rotaları kaydet
         app.register_blueprint(comment_routes.comment_routes)
+        app.register_blueprint(admin_routes.admin_routes)  # admin_routes'u kaydet
 
         return app

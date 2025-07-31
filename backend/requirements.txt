@@ -20,3 +20,5 @@ SQLAlchemy==2.0.31
 # Kullanıcı oturum yönetimi ve şifreleme
 Flask-Login==0.6.3
 Werkzeug==3.0.3
+PyJWT
+Flask-Session

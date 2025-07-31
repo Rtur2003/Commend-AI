@@ -2,11 +2,13 @@ from flask import Blueprint, request, jsonify
 from pydantic import BaseModel, Field
 from flask_pydantic import validate
 from typing import Literal
-from ..services.youtube_service import get_video_details, post_youtube_comment
+from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments
 from ..services.gemini_service import generate_comment_text
+
 # Değişen importlar: add_comment ve mark_comment_as_posted gitti, add_posted_comment geldi
 from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment
 import re
+
 
 comment_routes = Blueprint('comment', __name__)
 
@@ -27,16 +29,27 @@ def generate_comment_route(body: GenerateCommentRequest):
     if error:
         return jsonify({"status": "error", "message": error}), 500
 
-    comment_text, error = generate_comment_text(details, body.comment_style, body.language)
+    # Video ID’yi URL'den al
+    video_id_match = re.search(r"(?<=v=)[^&#]+", body.video_url) or re.search(r"(?<=be/)[^&#]+", body.video_url)
+    if not video_id_match:
+        return jsonify({"status": "error", "message": "Geçersiz video URL'si"}), 400
+    video_id = video_id_match.group(0)
+
+    # İlk 10 yorumu al
+    comments, comment_err = get_video_comments(video_id, max_results=10)
+    if comment_err:
+        comments = []  # Yorumlar başarısızsa prompt'u yorumlar olmadan oluşturur
+
+    # Yorumu oluştur
+    comment_text, error = generate_comment_text(details, body.comment_style, body.language, comments)
     if error:
         return jsonify({"status": "error", "message": error}), 500
-    
-    # VERİTABANI KAYDI BU ROTADAN KALDIRILDI.
-    
+
     return jsonify({
         "status": "success",
         "generated_text": comment_text
     })
+
 
 
 @comment_routes.route('/api/post_comment', methods=['POST'])
