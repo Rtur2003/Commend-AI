@@ -1,0 +1,26 @@
+# İşletim sistemi ve IDE'ler tarafından oluşturulan dosyalar
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Python / Backend'e özel dosyalar
+backend/venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+backend/.env
+
+# Node.js / Frontend'e özel dosyalar
+frontend/node_modules/
+frontend/build/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Geçici dosyalar
+*.tmp
+*.swp

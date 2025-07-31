@@ -1,0 +1,12 @@
+# Web framework
+Flask==3.0.3
+python-dotenv==1.0.1
+
+# API'ler ile iletişim için
+google-api-python-client==2.134.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.0
+requests==2.32.3
+
+# Çapraz kaynak isteklerine izin vermek için (Frontend <-> Backend)
+Flask-Cors==4.0.1
