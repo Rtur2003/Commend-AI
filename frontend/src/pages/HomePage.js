@@ -4,6 +4,7 @@ import { generateComment, postCommentToYouTube, getHistory } from '../services/a
 import CommentForm from '../components/CommentForm';
 import ResultDisplay from '../components/ResultDisplay';
 import HistoryPanel from '../components/HistoryPanel';
+import { motion } from 'framer-motion';
 
 function App() {
   // --- STATE MANAGEMENT ---
@@ -91,7 +92,12 @@ function App() {
 
   // --- RENDER ---
   return (
-    <div className="container">
+    <motion.div
+        className="container"
+        initial={{ opacity: 0, y: 20 }} // Başlangıç durumu: görünmez ve 20px aşağıda
+        animate={{ opacity: 1, y: 0 }}  // Bitiş durumu: görünür ve normal pozisyonunda
+        transition={{ duration: 0.6 }}   // Animasyon süresi
+        >
       <header>
         <h1>CommendAI</h1>
         {!error && <p className="status-message">{statusMessage}</p>}
@@ -131,7 +137,7 @@ function App() {
           handleUseHistoryItem={handleUseHistoryItem}
         />
       </main>
-    </div>
+    </motion.div>
   );
 }
 

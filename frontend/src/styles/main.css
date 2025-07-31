@@ -20,6 +20,30 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
 }
+/* Videoyu tam ekran arka plan yapar */
+.background-video {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -2; /* Her şeyin en arkasında durması için */
+  object-fit: cover; /* Videonun ekranı orantılı şekilde kaplamasını sağlar */
+}
+
+/* Video üzerine karartma efekti ekler */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Siyah, %70 şeffaflıkta bir katman */
+  z-index: -1; /* Video ile içerik arasında durması için */
+}
 
 button {
   font-family: inherit;
@@ -266,30 +290,6 @@ button:disabled {
   cursor: pointer;
 }
 
-/* --- YENİ EKLENEN STİLLER --- */
-
-/* Ana Navigasyon */
-.main-nav {
-  background-color: var(--surface-color);
-  padding: 15px 40px;
-  text-align: center;
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.main-nav a {
-  color: var(--text-color);
-  text-decoration: none;
-  font-weight: bold;
-  margin: 0 15px;
-  transition: color 0.2s;
-  font-size: 1.1rem;
-}
-
-.main-nav a:hover {
-  color: var(--primary-color);
-}
-
 /* Admin Login Formu ve Dashboard */
 .login-form, .admin-dashboard {
   max-width: 500px;
@@ -329,4 +329,131 @@ button:disabled {
   border: none;
   border-top: 1px solid var(--border-color);
   margin: 20px 0;
+}
+/* Ana Yerleşim Stilleri */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex-grow: 1; /* Bu, içeriğin tüm boş alanı doldurmasını ve footer'ı aşağı itmesini sağlar */
+}
+
+/* Header Stilleri */
+.app-header {
+  background-color: var(--surface-color);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.app-header .logo a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.app-header .main-nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 15px;
+  transition: color 0.2s;
+  font-size: 1.1rem;
+}
+
+.app-header .main-nav a:hover {
+  color: var(--primary-color);
+}
+
+/* Footer Stilleri */
+.app-footer {
+  background-color: var(--surface-color);
+  text-align: center;
+  padding: 20px;
+  margin-top: auto; /* İçerik kısa olsa bile en altta kalmasını sağlar */
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: var(--label-color);
+}
+/* Dosyanın en altına ekleyin */
+
+/* Admin Reklam Yönetimi */
+.ad-form {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: var(--background-color);
+  border-radius: 8px;
+}
+
+.ad-form h4 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.ad-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: #333;
+  color: var(--text-color);
+}
+
+.ad-list {
+  margin-top: 20px;
+}
+
+.ad-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--label-color);
+}
+
+.ad-item.active {
+  border-left-color: var(--success-color);
+}
+
+.ad-content {
+  flex-grow: 1;
+}
+
+.ad-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.ad-actions button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid var(--label-color);
+  background-color: #333;
+  color: var(--text-color);
+}
+
+.ad-actions button.delete-button {
+  background-color: var(--error-color);
+  border-color: var(--error-color);
+  color: white;
+}
+.ad-status {
+    font-size: 0.8rem;
+    font-weight: bold;
 }

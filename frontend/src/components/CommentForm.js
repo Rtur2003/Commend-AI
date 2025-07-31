@@ -1,5 +1,6 @@
 import React from 'react';
 import Spinner from './Spinner';
+import { motion } from 'framer-motion'; // Framer Motion import edildi
 
 const CommentForm = ({ 
   videoUrl, setVideoUrl, 
@@ -30,10 +31,17 @@ const CommentForm = ({
           <option value="Japanese">日本語</option>
         </select>
       </div>
-      <button type="submit" disabled={isLoading || isPosting}>
+      
+      {/* Button etiketi motion.button olarak değiştirildi ve animasyon eklendi */}
+      <motion.button
+        type="submit"
+        disabled={isLoading || isPosting}
+        whileHover={{ scale: 1.03 }} // Üzerine gelince %3 büyür
+        whileTap={{ scale: 0.98 }}   // Tıklanınca %2 küçülür
+      >
         {isLoading && <Spinner />}
         {isLoading ? 'Generating...' : 'Generate Comment'}
-      </button>
+      </motion.button>
     </form>
   );
 };

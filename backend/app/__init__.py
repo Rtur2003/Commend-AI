@@ -23,7 +23,7 @@ def create_app(config_class=Config):
 
     with app.app_context():
         # Rota ve modelleri import et
-        from .models import user, comment 
+        from .models import user, comment,ad 
         from .routes import comment_routes
 
         # Veritabanı tablolarını oluştur
