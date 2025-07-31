@@ -10,3 +10,5 @@ requests==2.32.3
 
 # Çapraz kaynak isteklerine izin vermek için (Frontend <-> Backend)
 Flask-Cors==4.0.1
+pydantic==2.8.2
+flask-pydantic==0.12.0
