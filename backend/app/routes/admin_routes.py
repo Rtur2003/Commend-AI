@@ -97,7 +97,8 @@ def get_ads():
             "content": ad.content,
             "link_url": ad.link_url,
             "is_active": ad.is_active,
-            "created_at": ad.created_at
+            "created_at": ad.created_at,
+            "position":ad.position
         } for ad in ads
     ])
 

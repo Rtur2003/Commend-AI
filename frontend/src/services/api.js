@@ -1,56 +1,37 @@
 import axios from 'axios';
 
-// Backend sunucumuzun ana adresi
 const API_URL = 'http://127.0.0.1:5000/api';
 
-// Token'ı localStorage'a kaydet/al/sil
-const setToken = (token) => {
-  localStorage.setItem('admin_token', token);
-};
+// Token işlemleri
+const setToken = (token) => localStorage.setItem('admin_token', token);
+const getToken = () => localStorage.getItem('admin_token');
+const removeToken = () => localStorage.removeItem('admin_token');
 
-const getToken = () => {
-  return localStorage.getItem('admin_token');
-};
-
-const removeToken = () => {
-  localStorage.removeItem('admin_token');
-};
-
-// Axios interceptor - her istekte token'ı ekle
+// Axios interceptors
 axios.interceptors.request.use((config) => {
   const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Response interceptor - 403 hatası gelirse token'ı sil
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 403) {
-      removeToken();
-    }
+    if (error.response?.status === 403) removeToken();
     return Promise.reject(error);
   }
 );
 
-/**
- * Yeni bir yorum taslağı üretmek için backend'e istek gönderir.
- */
+// Yorum fonksiyonları
 export const generateComment = async (videoUrl, language) => {
   const response = await axios.post(`${API_URL}/generate_comment`, {
     video_url: videoUrl,
     language: language,
-    comment_style: 'default' 
+    comment_style: 'default'
   });
   return response.data.generated_text;
 };
 
-/**
- * Üretilen yorumu YouTube'a gönderir.
- */
 export const postCommentToYouTube = async (videoUrl, commentText) => {
   const response = await axios.post(`${API_URL}/post_comment`, {
     video_url: videoUrl,
@@ -59,15 +40,21 @@ export const postCommentToYouTube = async (videoUrl, commentText) => {
   return response.data;
 };
 
-/**
- * Kaydedilmiş tüm yorum geçmişini getirir.
- */
 export const getHistory = async () => {
   const response = await axios.get(`${API_URL}/history`);
   return response.data.history;
 };
 
-// --- ADMIN PANELİ - REKLAM FONKSİYONLARI ---
+// Reklam fonksiyonları
+export const getActiveAds = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/public/active-ads`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching active ads:', error);
+    return [];
+  }
+};
 
 export const getAds = async () => {
   const response = await axios.get(`${API_URL}/admin/ads`);
@@ -77,6 +64,16 @@ export const getAds = async () => {
 export const createAd = async (adData) => {
   const response = await axios.post(`${API_URL}/admin/ads`, adData);
   return response.data;
+};
+
+export const updateAd = async (adId, adData) => {
+  try {
+    const response = await axios.put(`${API_URL}/admin/ads/${adId}`, adData);
+    return response.data;
+  } catch (error) {
+    console.error('Update error:', error.response?.data || error.message);
+    throw error;
+  }
 };
 
 export const deleteAd = async (adId) => {
@@ -89,13 +86,10 @@ export const toggleAdStatus = async (adId) => {
   return response.data;
 };
 
-// --- ADMIN GİRİŞ FONKSİYONLARI ---
-
+// Admin fonksiyonları
 export const adminLogin = async (password) => {
   const response = await axios.post(`${API_URL}/admin/login`, { password });
-  if (response.data.token) {
-    setToken(response.data.token);
-  }
+  if (response.data.token) setToken(response.data.token);
   return response.data;
 };
 
@@ -107,9 +101,7 @@ export const adminLogout = async () => {
 
 export const checkAdminAuth = async () => {
   const token = getToken();
-  if (!token) {
-    return { is_admin: false };
-  }
+  if (!token) return { is_admin: false };
   const response = await axios.get(`${API_URL}/admin/check_auth`);
   return response.data;
 };

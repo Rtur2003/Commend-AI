@@ -2,10 +2,8 @@ from flask import Blueprint, request, jsonify
 from pydantic import BaseModel, Field
 from flask_pydantic import validate
 from typing import Literal
-from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments
+from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details
 from ..services.gemini_service import generate_comment_text
-
-# Değişen importlar: add_comment ve mark_comment_as_posted gitti, add_posted_comment geldi
 from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment
 import re
 
@@ -25,32 +23,33 @@ class PostCommentRequest(BaseModel):
 @comment_routes.route('/api/generate_comment', methods=['POST'])
 @validate()
 def generate_comment_route(body: GenerateCommentRequest):
+    # 1. Video detaylarını ve istatistiklerini çek
     details, error = get_video_details(body.video_url)
     if error:
         return jsonify({"status": "error", "message": error}), 500
 
-    # Video ID’yi URL'den al
+    # 2. Kanal istatistiklerini çek
+    if details and details.get('channel_id'):
+        channel_stats, error = get_channel_details(details['channel_id'])
+        if channel_stats:
+            details.update(channel_stats) # Kanal istatistiklerini ana 'details' sözlüğüne ekle
+
+    # 3. Mevcut yorumları çek
     video_id_match = re.search(r"(?<=v=)[^&#]+", body.video_url) or re.search(r"(?<=be/)[^&#]+", body.video_url)
-    if not video_id_match:
-        return jsonify({"status": "error", "message": "Geçersiz video URL'si"}), 400
-    video_id = video_id_match.group(0)
+    video_id = video_id_match.group(0) if video_id_match else None
+    existing_comments = []
+    if video_id:
+        existing_comments, _ = get_video_comments(video_id, max_results=10)
 
-    # İlk 10 yorumu al
-    comments, comment_err = get_video_comments(video_id, max_results=10)
-    if comment_err:
-        comments = []  # Yorumlar başarısızsa prompt'u yorumlar olmadan oluşturur
-
-    # Yorumu oluştur
-    comment_text, error = generate_comment_text(details, body.comment_style, body.language, comments)
+    # 4. Tüm verilerle Gemini'den yorum üret
+    comment_text, error = generate_comment_text(details, body.comment_style, body.language, existing_comments)
     if error:
         return jsonify({"status": "error", "message": error}), 500
-
+   # CORRECT
     return jsonify({
         "status": "success",
         "generated_text": comment_text
     })
-
-
 
 @comment_routes.route('/api/post_comment', methods=['POST'])
 @validate()

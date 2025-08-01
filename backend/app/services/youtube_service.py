@@ -6,38 +6,35 @@ import os
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
+import isodate # Videonun süresini parse etmek için
 
-# Bu kapsamlarda değişiklik yaparsanız, token.json dosyasını silin.
-SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
-CLIENT_SECRETS_FILE = os.path.join(os.path.dirname(__file__), '..', '..', 'client_secret.json')
-TOKEN_FILE = os.path.join(os.path.dirname(__file__), '..', '..', 'token.json')
+    
 
+# ... get_authenticated_service() fonksiyonu aynı kalıyor ...
 def get_authenticated_service():
+    CLIENT_SECRETS_FILE = 'client_secret.json'
+
+    # OAuth kimlik bilgilerini depolayacak dosyanın adı
+    TOKEN_FILE = 'token.json'
+
+    # Gerekli kapsamlar (API'nin hangi verilere erişebileceğini belirler)
+    SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
     """OAuth 2.0 ile YouTube API kimlik doğrulaması yapar ve servis nesnesini döndürür."""
     creds = None
-    # token.json dosyası, kullanıcının erişim ve yenileme token'larını saklar ve 
-    # ilk yetkilendirme akışı tamamlandığında otomatik olarak oluşturulur.
     if os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-
-    # Eğer geçerli kimlik bilgisi yoksa, kullanıcının giriş yapmasına izin ver.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                CLIENT_SECRETS_FILE, SCOPES)
-            # Bu, konsola bir URL yazdıracaktır. Yetkilendirme yapmak için bu linki AÇMANIZ ZORUNLUDUR.
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
-        
-        # Bir sonraki çalıştırma için kimlik bilgilerini kaydet
         with open(TOKEN_FILE, 'w') as token:
             token.write(creds.to_json())
-    
     return build('youtube', 'v3', credentials=creds)
 
 def get_video_details(video_url):
-    """Verilen YouTube URL'sinden video detaylarını çeker."""
+    """Verilen YouTube URL'sinden metinsel, istatistiksel ve içerik detaylarını çeker."""
     try:
         video_id_match = re.search(r"(?<=v=)[^&#]+", video_url) or re.search(r"(?<=be/)[^&#]+", video_url)
         if not video_id_match:
@@ -45,9 +42,9 @@ def get_video_details(video_url):
         video_id = video_id_match.group(0)
 
         youtube = get_authenticated_service()
-
+        # İsteğe 'statistics' ve 'contentDetails' bölümlerini ekliyoruz
         request = youtube.videos().list(
-            part="snippet",
+            part="snippet,statistics,contentDetails",
             id=video_id
         )
         response = request.execute()
@@ -55,51 +52,79 @@ def get_video_details(video_url):
         if not response.get('items'):
             return None, "Video bulunamadı"
 
-        video_snippet = response['items'][0]['snippet']
+        item = response['items'][0]
+        snippet = item['snippet']
+        stats = item.get('statistics', {})
+        content = item.get('contentDetails', {})
+
+        # Süreyi okunabilir bir formata çevir
+        duration_iso = content.get('duration', 'PT0S')
+        duration_seconds = isodate.parse_duration(duration_iso).total_seconds()
+        duration_formatted = f"{int(duration_seconds // 60)} dakika {int(duration_seconds % 60)} saniye"
+
         details = {
-            'title': video_snippet.get('title'),
-            'channel_name': video_snippet.get('channelTitle'),
-            'description': video_snippet.get('description')
+            'title': snippet.get('title'),
+            'channel_name': snippet.get('channelTitle'),
+            'channel_id': snippet.get('channelId'), # Kanal istatistikleri için
+            'description': snippet.get('description'),
+            'view_count': int(stats.get('viewCount', 0)),
+            'like_count': int(stats.get('likeCount', 0)),
+            'comment_count': int(stats.get('commentCount', 0)),
+            'duration': duration_formatted
         }
         return details, None
     except Exception as e:
-        print(f"get_video_details içinde beklenmedik bir hata oluştu: {e}")
-        return None, "Beklenmedik bir hata oluştu. Backend konsolunu kontrol edin."
+        print(f"Video detayları alınırken hata oluştu: {e}")
+        return None, "Video detayları alınırken bir hata oluştu."
 
-        # Dosyanın en altına bu fonksiyonu ekleyin
+# --- YENİ FONKSİYON: KANAL DETAYLARINI ÇEKME ---
+def get_channel_details(channel_id):
+    """Verilen kanal ID'sinden kanal istatistiklerini çeker."""
+    try:
+        youtube = get_authenticated_service()
+        request = youtube.channels().list(
+            part="statistics",
+            id=channel_id
+        )
+        response = request.execute()
+
+        if not response.get('items'):
+            return None, "Kanal bulunamadı"
+
+        stats = response['items'][0].get('statistics', {})
+        details = {
+            'subscriber_count': int(stats.get('subscriberCount', 0))
+        }
+        return details, None
+    except Exception as e:
+        print(f"Kanal detayları alınırken hata oluştu: {e}")
+        return None, "Kanal detayları alınırken bir hata oluştu."
+
 def post_youtube_comment(video_id, comment_text):
     """Verilen video ID'sine, belirtilen metinle bir yorum gönderir."""
     try:
         youtube = get_authenticated_service()
-
-        insert_request = youtube.commentThreads().insert(
-            part="snippet",
-            body={
-                "snippet": {
-                    "videoId": video_id,
-                    "topLevelComment": {
-                        "snippet": {
-                            "textOriginal": comment_text
-                        }
-                    }
-                }
+        request_body = {
+            "snippet": {
+                "videoId": video_id,
+                "topLevelComment": {"snippet": {"textOriginal": comment_text}}
             }
-        )
-        response = insert_request.execute()
+        }
+        response = youtube.commentThreads().insert(part="snippet", body=request_body).execute()
         return response, None
     except Exception as e:
-        print(f"An error occurred while posting comment: {e}")
-        return None, "An error occurred while posting the comment."
-        
-def get_video_comments(video_id, max_results=10):
-    """Belirtilen video ID'sine ait ilk yorumları çeker."""
+        print(f"Yorum gönderilirken hata oluştu: {e}")
+        return None, "Yorum gönderilirken bir hata oluştu."
+
+def get_video_comments(video_id, max_results=20):
+    """Belirtilen video ID'sine ait en alakalı ilk yorumları çeker."""
     try:
         youtube = get_authenticated_service()
         request = youtube.commentThreads().list(
             part="snippet",
             videoId=video_id,
             maxResults=max_results,
-            order="relevance"  # Alternatif: 'time'
+            order="relevance"
         )
         response = request.execute()
 
@@ -110,8 +135,7 @@ def get_video_comments(video_id, max_results=10):
                 'author': top_comment.get('authorDisplayName'),
                 'text': top_comment.get('textDisplay')
             })
-
         return comments, None
     except Exception as e:
         print(f"Yorumlar alınırken hata oluştu: {e}")
-        return None, "Yorumlar alınırken hata oluştu."
+        return None, "Videodan yorumlar alınırken bir hata oluştu."

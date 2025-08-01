@@ -5,6 +5,7 @@ import CommentForm from '../components/CommentForm';
 import ResultDisplay from '../components/ResultDisplay';
 import HistoryPanel from '../components/HistoryPanel';
 import { motion } from 'framer-motion';
+import AdBanner from '../components/AdBanner';  
 
 function App() {
   // --- STATE MANAGEMENT ---
@@ -17,6 +18,9 @@ function App() {
   const [statusMessage, setStatusMessage] = useState('Ready to generate a new comment.');
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
+  const [comment, setComment] = useState('');
+  const [platform, setPlatform] = useState('');
+  
   
   // --- LOGIC / FUNCTIONS ---
   const fetchHistory = async () => {
@@ -108,7 +112,7 @@ function App() {
           </div>
         )}
       </header>
-
+      <AdBanner position="top" />
       <main>
         <CommentForm 
           videoUrl={videoUrl}
@@ -120,6 +124,8 @@ function App() {
           isPosting={isPosting}
         />
 
+        
+
         {originalComment && (
           <ResultDisplay
             generatedComment={generatedComment}
@@ -130,11 +136,15 @@ function App() {
             isLoading={isLoading}
             isPosting={isPosting}
           />
+          
         )}
         
+        <AdBanner position="bottom" />
+
         <HistoryPanel 
           history={history}
           handleUseHistoryItem={handleUseHistoryItem}
+
         />
       </main>
     </motion.div>
