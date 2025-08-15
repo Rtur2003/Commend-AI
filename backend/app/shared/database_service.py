@@ -5,8 +5,8 @@ import uuid
 
 # SQLAlchemy için gerekli importlar
 try:
-    from .. import db
-    from ..models.comment import Comment
+    from ..core.database import db
+    from ..modules.comment.models import Comment
     USE_SQLALCHEMY = True
 except ImportError:
     USE_SQLALCHEMY = False
