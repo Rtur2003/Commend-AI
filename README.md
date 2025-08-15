@@ -191,7 +191,7 @@ After running the backend for the first time, when you try to perform an operati
 
 ### Live Deployment URLs
 
-🌐 **Frontend (Vercel):** https://commend-ai-frontend.vercel.app  
+🌐 **Frontend (Vercel):** [https://commend-ai-frontend.vercel.app](https://commend-ai.vercel.app)  
 ⚙️ **Backend API (Render):** https://commend-ai-backend.onrender.com  
 📊 **Health Check:** https://commend-ai-backend.onrender.com/api/test
 
