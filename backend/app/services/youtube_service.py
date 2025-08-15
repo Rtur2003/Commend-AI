@@ -18,10 +18,16 @@ def get_authenticated_service():
     # Environment variable'dan client secret'ı oku
     CLIENT_SECRET_JSON = os.getenv('CLIENT_SECRET_JSON')
     if CLIENT_SECRET_JSON:
-        # Temporary file oluştur
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
-            temp_file.write(CLIENT_SECRET_JSON)
-            CLIENT_SECRETS_FILE = temp_file.name
+        try:
+            # JSON'u parse et (validation için)
+            json_data = json.loads(CLIENT_SECRET_JSON)
+            # Temporary file oluştur
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
+                json.dump(json_data, temp_file)
+                CLIENT_SECRETS_FILE = temp_file.name
+        except json.JSONDecodeError as e:
+            print(f"CLIENT_SECRET_JSON parse error: {e}")
+            CLIENT_SECRETS_FILE = 'client_secret.json'  # Fallback
     else:
         CLIENT_SECRETS_FILE = 'client_secret.json'
 
