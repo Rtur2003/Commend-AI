@@ -1,27 +1,32 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const ResultDisplay = ({
   generatedComment,
   handlePostComment, copyToClipboard,
   isLoading, isPosting
 }) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="result-area">
       <div className="result-area-header">
-        <h3>Generated Comment</h3>
-        <p className="readonly-notice">Bu yorum AI tarafından oluşturulmuştur ve düzenlenemez.</p>
+        <h3>{t('resultTitle')}</h3>
+        <p className="readonly-notice">{t('resultReadonlyNotice')}</p>
       </div>
       <textarea
         value={generatedComment}
-        placeholder="Generated comment will appear here..."
+        placeholder={t('resultPlaceholder')}
         readOnly
         className="readonly-textarea"
       />
       <div className="action-buttons">
         <button onClick={handlePostComment} disabled={isPosting || isLoading || !generatedComment} className="post-button">
-          {isPosting ? 'Posting...' : 'Post to YouTube'}
+          {isPosting ? t('buttonPosting') : t('buttonPostToYoutube')}
         </button>
-        <button onClick={copyToClipboard} className="copy-button" disabled={!generatedComment}>Copy Text</button>
+        <button onClick={copyToClipboard} className="copy-button" disabled={!generatedComment}>
+          {t('buttonCopyText')}
+        </button>
       </div>
     </div>
   );

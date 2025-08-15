@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './styles/main.css';
 
 function App() {
-  const [pageLanguage, setPageLanguage] = useState('en');
-
   return (
-    <div className="app-layout">
-      <Header pageLanguage={pageLanguage} setPageLanguage={setPageLanguage} />
-      <main className="app-content">
-        <Routes>
-          <Route path="/" element={<HomePage pageLanguage={pageLanguage} />} />
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <HelmetProvider>
+      <LanguageProvider>
+        <div className="app-layout">
+          <Header />
+          <main className="app-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/admin" element={<AdminPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </LanguageProvider>
+    </HelmetProvider>
   );
 }
 

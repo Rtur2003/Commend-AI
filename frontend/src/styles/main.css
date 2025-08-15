@@ -483,7 +483,8 @@ button:disabled {
   display: none;
 }
 
-.language-selector:hover .lang-dropdown {
+.language-selector:hover .lang-dropdown,
+.language-selector.open .lang-dropdown {
   display: block;
 }
 
@@ -1407,8 +1408,231 @@ button:disabled {
   display: block;
 }
 
-/* Responsive adjustments */
+/* Mobile Responsive Design */
 @media (max-width: 768px) {
+  /* Header Mobile Styles */
+  .app-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+  
+  .app-header .logo {
+    text-align: center;
+  }
+  
+  .app-header .logo a {
+    font-size: 1.5rem;
+  }
+  
+  .app-header .author-badge {
+    display: block;
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  
+  .main-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .main-nav a {
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  /* Language Selector Mobile */
+  .language-selector {
+    position: relative;
+  }
+  
+  .lang-button {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+    min-width: 120px;
+  }
+  
+  .lang-dropdown {
+    right: 0;
+    left: auto;
+    min-width: 140px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .lang-dropdown button {
+    padding: 12px 15px;
+    font-size: 0.85rem;
+  }
+
+  /* Container Mobile */
+  .container {
+    margin: 20px auto;
+    padding: 20px 15px;
+    max-width: 95%;
+  }
+  
+  header h1 {
+    font-size: 2.2rem;
+  }
+  
+  /* Form Mobile Styles */
+  .form-group input,
+  .form-group select {
+    padding: 12px 10px;
+    font-size: 1rem;
+  }
+  
+  button[type="submit"] {
+    padding: 15px 12px;
+    font-size: 1rem;
+  }
+  
+  /* Textarea Mobile */
+  .result-area textarea {
+    min-height: 150px;
+    padding: 12px 10px;
+    font-size: 0.95rem;
+  }
+  
+  /* Action Buttons Mobile */
+  .action-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .post-button,
+  .copy-button,
+  .toggle-history-button {
+    flex: 1;
+    min-width: calc(50% - 4px);
+    padding: 12px 8px;
+    font-size: 0.9rem;
+  }
+  
+  /* Error Messages Mobile */
+  .error-message,
+  .warning-message {
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  
+  .error-message .dismiss {
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+  
+  /* History Panel Mobile */
+  .history-item {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .history-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .history-meta .use-button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  /* Admin Dashboard Mobile */
+  .admin-dashboard {
+    margin: 10px;
+    padding: 20px 15px;
+  }
+  
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .admin-title h2 {
+    font-size: 1.8rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .stat-card {
+    padding: 20px 15px;
+  }
+  
+  .admin-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .tab-button {
+    white-space: nowrap;
+    padding: 12px 20px;
+    flex-shrink: 0;
+  }
+  
+  .ad-form {
+    padding: 20px 15px;
+  }
+  
+  .ads-grid {
+    gap: 15px;
+  }
+  
+  .ad-item {
+    padding: 15px;
+  }
+  
+  .ad-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .ad-actions button {
+    width: 100%;
+    padding: 12px;
+  }
+  
+  /* Login Form Mobile */
+  .login-form {
+    padding: 30px 20px;
+    margin: 20px 10px;
+  }
+  
+  .login-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  /* Ad Banner Mobile */
+  .ad-banner-container {
+    padding: 15px;
+    margin: 0 10px;
+  }
+  
+  .ad-content {
+    font-size: 0.9rem;
+  }
+  
+  .ad-indicators {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  /* Position specific mobile styles */
   .position-stats {
     grid-template-columns: 1fr;
   }
@@ -1419,5 +1643,146 @@ button:disabled {
   
   .position-title {
     font-size: 1rem;
+  }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 12px 15px;
+  }
+  
+  .app-header .logo a {
+    font-size: 1.3rem;
+  }
+  
+  .container {
+    margin: 10px auto;
+    padding: 15px 10px;
+    max-width: 98%;
+    border-radius: 12px;
+  }
+  
+  header h1 {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+  }
+  
+  .status-message {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  
+  .lang-button {
+    font-size: 0.75rem;
+    padding: 6px 8px;
+    min-width: 100px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 10px 8px;
+    font-size: 0.95rem;
+  }
+  
+  button[type="submit"] {
+    padding: 12px 10px;
+    font-size: 0.95rem;
+    margin-top: 10px;
+  }
+  
+  .result-area {
+    margin-top: 20px;
+  }
+  
+  .result-area-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .readonly-notice {
+    font-size: 0.8rem;
+  }
+  
+  .result-area textarea {
+    min-height: 120px;
+    padding: 10px 8px;
+    font-size: 0.9rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .post-button,
+  .copy-button,
+  .toggle-history-button {
+    width: 100%;
+    min-width: auto;
+    padding: 12px 15px;
+  }
+  
+  .history-panel {
+    margin-top: 25px;
+    padding-top: 15px;
+  }
+  
+  .history-item {
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .admin-title h2 {
+    font-size: 1.5rem;
+  }
+  
+  .login-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  /* Background video adjustments for very small screens */
+  .background-video {
+    object-position: center center;
+  }
+}
+
+/* Touch-specific styles */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch targets */
+  .lang-button,
+  .lang-dropdown button {
+    min-height: 44px;
+    padding: 12px 15px;
+  }
+  
+  button[type="submit"],
+  .post-button,
+  .copy-button,
+  .toggle-history-button {
+    min-height: 48px;
+  }
+  
+  /* Make dropdown more touch-friendly */
+  .language-selector:hover .lang-dropdown {
+    display: none;
+  }
+  
+  .language-selector.open .lang-dropdown {
+    display: block;
+  }
+  
+  /* Improve scrolling on mobile */
+  .admin-tabs {
+    scroll-behavior: smooth;
   }
 }

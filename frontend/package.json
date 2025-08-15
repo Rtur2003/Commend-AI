@@ -15,6 +15,7 @@
     "lucide-react": "^0.535.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-helmet-async": "^2.0.5",
     "react-i18next": "^15.6.1",
     "react-router-dom": "^7.7.1",
     "react-scripts": "5.0.1",

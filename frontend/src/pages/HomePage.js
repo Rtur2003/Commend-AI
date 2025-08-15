@@ -4,26 +4,21 @@ import { generateComment, postCommentToYouTube, getHistory } from '../services/a
 import CommentForm from '../components/CommentForm';
 import ResultDisplay from '../components/ResultDisplay';
 import HistoryPanel from '../components/HistoryPanel';
+import SEOHead from '../components/SEOHead';
 import { motion } from 'framer-motion';
-import AdBanner from '../components/AdBanner';  
+import AdBanner from '../components/AdBanner';
+import { useLanguage } from '../contexts/LanguageContext';
 
-function HomePage({ pageLanguage }) {
+function HomePage() {
+  const { currentLanguage, t, getCommentLanguage } = useLanguage();
+  
   // --- STATE MANAGEMENT ---
   const [videoUrl, setVideoUrl] = useState('');
-  // Sayfa dili ile yorum dili eşleştirmesi
-  const languageMapping = {
-    'en': 'English',
-    'tr': 'Turkish', 
-    'ru': 'Russian',
-    'zh': 'Chinese',
-    'ja': 'Japanese'
-  };
-  
-  const [language, setLanguage] = useState(languageMapping[pageLanguage] || 'English');
+  const [language, setLanguage] = useState(getCommentLanguage(currentLanguage));
   const [generatedComment, setGeneratedComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
-  const [statusMessage, setStatusMessage] = useState('Yeni yorum oluşturmaya hazır.');
+  const [statusMessage, setStatusMessage] = useState(t('statusReady'));
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
   
@@ -35,7 +30,7 @@ function HomePage({ pageLanguage }) {
       setHistory(historyData);
     } catch (error) {
       console.error("Error fetching history!", error);
-      setError("Yorum geçmişi yüklenemedi.");
+      setError(t('errorHistoryLoad'));
     }
   };
 
@@ -43,16 +38,17 @@ function HomePage({ pageLanguage }) {
     fetchHistory();
   }, []);
 
-  // Sayfa dili değiştiğinde yorum dilini güncelle
+  // Interface language değiştiğinde comment dilini güncelle
   useEffect(() => {
-    setLanguage(languageMapping[pageLanguage] || 'English');
-  }, [pageLanguage]);
+    setLanguage(getCommentLanguage(currentLanguage));
+    setStatusMessage(t('statusReady'));
+  }, [currentLanguage, getCommentLanguage, t]);
 
   const handleGenerateComment = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setGeneratedComment('');
-    setStatusMessage('🧠 AI yorum oluşturuyor... Lütfen bekleyin.');
+    setStatusMessage(t('statusGenerating'));
     setError(null);
 
     try {
@@ -60,7 +56,7 @@ function HomePage({ pageLanguage }) {
       
       // Backend'den gelen response'u kontrol et
       if (response.status === 'warning') {
-        setStatusMessage('⚠️ Uyarı: Duplicate video tespit edildi');
+        setStatusMessage(t('errorDuplicateDetected'));
         setError(response.message);
         
         // Yorum generate edilmemişse hiçbir şey yapma
@@ -73,23 +69,23 @@ function HomePage({ pageLanguage }) {
       setGeneratedComment(commentText);
       
       if (response.status !== 'warning') {
-        setStatusMessage('✅ Yorum başarıyla oluşturuldu! YouTube\'a gönderebilirsiniz.');
+        setStatusMessage(t('statusGenerated'));
       }
     } catch (err) {
       // Hata mesajını kullanıcı dostu şekilde göster
       const errorData = err.response?.data;
-      let errorMessage = "Bilinmeyen bir hata oluştu.";
+      let errorMessage = t('errorUnknown');
       
       if (errorData?.user_friendly && errorData?.message) {
         errorMessage = errorData.message;
       } else if (errorData?.message) {
         errorMessage = errorData.message;
       } else if (err.message) {
-        errorMessage = `Bağlantı hatası: ${err.message}`;
+        errorMessage = `${t('errorConnection')} ${err.message}`;
       }
       
       setError(errorMessage);
-      setStatusMessage('❌ Yorum oluşturulamadı');
+      setStatusMessage(t('statusError'));
     } finally {
       setIsLoading(false);
     }
@@ -98,30 +94,30 @@ function HomePage({ pageLanguage }) {
   const handlePostComment = async () => {
     if (!generatedComment.trim()) return;
     setIsPosting(true);
-    setStatusMessage('🚀 Yorum YouTube\'a gönderiliyor...');
+    setStatusMessage(t('statusPosting'));
     setError(null);
 
     try {
       await postCommentToYouTube(videoUrl, generatedComment);
-      alert('🎉 Yorum başarıyla YouTube\'a gönderildi!');
-      setStatusMessage('✅ Yorum gönderildi! Yeni video için hazır.');
+      alert(t('successPosted'));
+      setStatusMessage(t('statusPosted'));
       setGeneratedComment('');
       fetchHistory(); // Geçmişi yenile
     } catch (err) {
       // Hata mesajını kullanıcı dostu şekilde göster
       const errorData = err.response?.data;
-      let errorMessage = "Yorum gönderilirken bilinmeyen bir hata oluştu.";
+      let errorMessage = t('errorPostUnknown');
       
       if (errorData?.user_friendly && errorData?.message) {
         errorMessage = errorData.message;
       } else if (errorData?.message) {
         errorMessage = errorData.message;
       } else if (err.message) {
-        errorMessage = `Bağlantı hatası: ${err.message}`;
+        errorMessage = `${t('errorConnection')} ${err.message}`;
       }
       
       setError(errorMessage);
-      setStatusMessage('❌ Yorum gönderilemedi');
+      setStatusMessage(t('statusPostError'));
     } finally {
       setIsPosting(false);
     }
@@ -130,29 +126,35 @@ function HomePage({ pageLanguage }) {
   const copyToClipboard = () => {
     if (!generatedComment) return;
     navigator.clipboard.writeText(generatedComment);
-    setStatusMessage('📋 Panoya kopyalandı!');
+    setStatusMessage(t('statusCopied'));
   };
 
   const handleUseHistoryItem = (text) => {
     setGeneratedComment(text);
-    setStatusMessage('📋 Geçmişten yorum yüklendi. Gönderime hazır.');
+    setStatusMessage(t('statusHistoryLoaded'));
     setError(null);
   };
 
   // --- RENDER ---
   return (
-    <motion.div
+    <>
+      <SEOHead />
+      <motion.div
         className="container"
         initial={{ opacity: 0, y: 20 }} // Başlangıç durumu: görünmez ve 20px aşağıda
         animate={{ opacity: 1, y: 0 }}  // Bitiş durumu: görünür ve normal pozisyonunda
         transition={{ duration: 0.6 }}   // Animasyon süresi
         >
       <header>
-        <h1>CommendAI</h1>
+        <h1>{t('pageTitle')}</h1>
         {!error && <p className="status-message">{statusMessage}</p>}
         {error && (
           <div className="error-message">
-            <button onClick={() => setError(null)} className="dismiss">×</button>
+            <button 
+              onClick={() => setError(null)} 
+              className="dismiss"
+              aria-label={t('ariaCloseError')}
+            >×</button>
             <div>{error}</div>
           </div>
         )}
@@ -169,8 +171,6 @@ function HomePage({ pageLanguage }) {
           isPosting={isPosting}
         />
 
-        
-
         {generatedComment && (
           <ResultDisplay
             generatedComment={generatedComment}
@@ -186,10 +186,10 @@ function HomePage({ pageLanguage }) {
         <HistoryPanel 
           history={history}
           handleUseHistoryItem={handleUseHistoryItem}
-
         />
       </main>
     </motion.div>
+    </>
   );
 }
 
