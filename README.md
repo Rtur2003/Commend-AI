@@ -219,3 +219,4 @@ After running the backend for the first time, when you try to perform an operati
 
   - **Main Interface:** Access from your application's domain address
   - **Admin Panel:** Go to `/admin` path and log in with the `ADMIN_PASSWORD` you set in the `.env` file
+# Migration endpoint
