@@ -18,8 +18,6 @@ function HomePage() {
   const [statusMessage, setStatusMessage] = useState('Ready to generate a new comment.');
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
-  const [comment, setComment] = useState('');
-  const [platform, setPlatform] = useState('');
   
   
   // --- LOGIC / FUNCTIONS ---

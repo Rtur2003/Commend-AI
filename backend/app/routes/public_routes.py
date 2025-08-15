@@ -3,6 +3,11 @@ from ..models.ad import Ad
 
 public_routes = Blueprint('public', __name__)
 
+@public_routes.route('/', methods=['GET'])
+def health_check():
+    """Health check endpoint."""
+    return jsonify({"status": "ok", "message": "CommendAI Backend is running!"})
+
 @public_routes.route('/api/public/active-ads', methods=['GET'])
 def get_active_ads():
     """Returns a list of all active ads."""
