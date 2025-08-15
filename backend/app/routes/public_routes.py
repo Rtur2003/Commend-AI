@@ -16,6 +16,7 @@ def test_env():
         "status": "ok",
         "has_gemini_key": bool(os.getenv('GEMINI_API_KEY')),
         "has_secret_key": bool(os.getenv('SECRET_KEY')),
+        "has_client_secret": bool(os.getenv('CLIENT_SECRET_JSON')),
         "flask_env": os.getenv('FLASK_ENV', 'not set')
     })
 
