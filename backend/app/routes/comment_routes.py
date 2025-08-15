@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from pydantic import BaseModel, Field
 from flask_pydantic import validate
-from typing import Literal
+from typing import Literal, Optional
 from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
 from ..services.gemini_service import generate_comment_text, summarize_transcript
 from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, add_generated_comment, mark_comment_as_posted, get_video_comment_count
@@ -19,7 +19,7 @@ class GenerateCommentRequest(BaseModel):
 class PostCommentRequest(BaseModel):
     video_url: str = Field(..., min_length=15)
     comment_text: str = Field(..., min_length=1)
-    comment_id: str = Field(None, description="Generated comment ID if available")
+    comment_id: Optional[str] = Field(default=None, description="Generated comment ID if available")
 
 @comment_routes.route('/api/generate_comment', methods=['POST'])
 def generate_comment_route():
@@ -188,11 +188,17 @@ def post_comment_route():
         
     # Create validated object
     try:
-        body = PostCommentRequest(
-            video_url=data['video_url'],
-            comment_text=data['comment_text'],
-            comment_id=data.get('comment_id', None)
-        )
+        # comment_id'yi sadece varsa ekle
+        request_data = {
+            'video_url': data['video_url'],
+            'comment_text': data['comment_text']
+        }
+        
+        # comment_id varsa ve None değilse ekle
+        if 'comment_id' in data and data['comment_id'] is not None:
+            request_data['comment_id'] = data['comment_id']
+            
+        body = PostCommentRequest(**request_data)
     except Exception as validation_error:
         return jsonify({
             "status": "error", 
