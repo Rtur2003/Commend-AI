@@ -1,119 +1,117 @@
 
------
-
 # CommendAI v2.0
-**Geliştirici: Hasan Arthur Altuntaş**
+**Developer: Hasan Arthur Altuntaş**
 
-> YouTube için yapay zeka destekli, stil sahibi yorumlar üreten ve bu yorumları sizin adınıza gönderen kişisel bir web uygulaması.
+> AI-powered web application that generates stylish, contextual comments for YouTube videos and posts them on your behalf.
 
 
 
-## ✨ Temel Özellikler
+## ✨ Key Features
 
-  - **Yapay Zeka Destekli Yorum Üretme:** Google Gemini API'si ile videonun içeriğine uygun, yaratıcı ve esprili yorumlar oluşturur.
-  - **Çoklu Dil Desteği:** Belirtilen dilde (Türkçe, İngilizce, Rusça vb.) yorumlar üretebilir.
-  - **Otomatik Yorum Gönderme:** Üretilen yorumları, yetkilendirilmiş bot hesabı üzerinden YouTube'a gönderir.
-  - **Yorum Geçmişi:** Daha önce gönderilmiş tüm yorumları saklar ve arayüzde gösterir.
-  - **Tekrarlı Yorum Engelleme:** Bir videoya daha önce yorum yapılmışsa, tekrar yorum gönderilmesini akıllıca engeller.
-  - **Veri Doğrulama:** Backend'e gelen verileri doğrulayarak sistemi daha güvenli ve sağlam hale getirir.
-  - **Admin Paneli:** Uygulama istatistiklerini takip etmek için gizli bir admin paneli içerir.
+  - **AI-Powered Comment Generation:** Uses Google Gemini API to create contextual, creative and witty comments based on video content.
+  - **Multi-Language Support:** Generates comments in specified languages (Turkish, English, Russian, etc.).
+  - **Automated Comment Posting:** Posts generated comments to YouTube through authorized bot account.
+  - **Comment History:** Stores and displays all previously posted comments in the interface.
+  - **Duplicate Prevention:** Intelligently prevents posting multiple comments to the same video.
+  - **Data Validation:** Validates backend data to make the system more secure and robust.
+  - **Admin Panel:** Includes a hidden admin panel to track application statistics.
 
-## 🛠️ Kullanılan Teknolojiler
+## 🛠️ Technologies Used
 
   - **Frontend:** React, React Router, Axios
   - **Backend:** Python, Flask, Pydantic
-  - **API'ler:** Google Gemini API, YouTube Data API v3
-  - **Veritabanı:** SQLite (development), PostgreSQL (production)
-  - **Kimlik Doğrulama:** Google OAuth 2.0, Flask Sessions
+  - **APIs:** Google Gemini API, YouTube Data API v3
+  - **Database:** SQLite (development), PostgreSQL (production)
+  - **Authentication:** Google OAuth 2.0, Flask Sessions
 
-## Gereksinimler
+## Prerequisites
 
-Projeyi çalıştırmadan önce bilgisayarınızda aşağıdaki araçların kurulu olduğundan emin olun:
+Before running the project, make sure you have the following tools installed:
 
-  - **Python** (versiyon 3.8+)
-  - **Node.js** ve **npm** (versiyon 16+)
+  - **Python** (version 3.8+)
+  - **Node.js** and **npm** (version 16+)
   - **Git**
 
-## 🚀 Kurulum Adımları
+## 🚀 Installation Steps
 
-Bu projeyi yerel makinenizde sıfırdan kurmak ve çalıştırmak için aşağıdaki adımları izleyin.
+Follow these steps to set up and run this project on your local machine.
 
-### 1\. Projeyi Bilgisayarınıza İndirin
+### 1\. Clone the Repository
 
 ```bash
 git clone https://github.com/Rtur2003/Commend-AI.git
 cd Commend-AI
 ```
 
-### 2\. Google Cloud ve API Anahtarlarını Ayarlama (En Önemli Adım)
+### 2\. Google Cloud and API Keys Setup (Most Important Step)
 
-Bu uygulama, Google'ın API'lerini kullandığı için birkaç anahtar ve kimlik bilgisi dosyası oluşturmanız gerekmektedir.
+Since this application uses Google's APIs, you need to create several keys and credential files.
 
-a. **Google Cloud Projesi Oluşturun:**
+a. **Create Google Cloud Project:**
 
-  - [Google Cloud Console](https://console.cloud.google.com/)'a gidin ve yeni bir proje oluşturun.
+  - Go to [Google Cloud Console](https://console.cloud.google.com/) and create a new project.
 
-b. **Gerekli API'leri Aktif Edin:**
+b. **Enable Required APIs:**
 
-  - Oluşturduğunuz projede, "API'ler ve Hizmetler" \> "Kitaplık" bölümüne gidin ve aşağıdaki iki API'yi aratıp etkinleştirin:
+  - In your created project, go to "APIs & Services" \> "Library" section and search for and enable these two APIs:
     1.  **YouTube Data API v3**
-    2.  **Generative Language API** (veya Vertex AI API)
+    2.  **Generative Language API** (or Vertex AI API)
 
-c. **Gemini API Anahtarı Oluşturun:**
+c. **Create Gemini API Key:**
 
-  - [Google AI Studio](https://ai.google.dev/)'ya gidin, aynı Google hesabıyla giriş yapın ve bir API anahtarı oluşturun. Bu anahtarı kopyalayın.
+  - Go to [Google AI Studio](https://ai.google.dev/), sign in with the same Google account and create an API key. Copy this key.
 
-d. **OAuth 2.0 Kimlik Bilgileri Oluşturun (`client_secret.json`):**
+d. **Create OAuth 2.0 Credentials (`client_secret.json`):**
 
-  - Google Cloud Console'da "API'ler ve Hizmetler" \> "Kimlik Bilgileri" sayfasına gidin.
-  - **"+ KİMLİK BİLGİSİ OLUŞTUR"** \> **"OAuth istemci kimliği"** seçeneğini seçin.
-  - **"Uygulama türü"** olarak **"Masaüstü uygulaması"** seçin.
-  - Bir isim verin ve **OLUŞTUR**'a tıklayın.
-  - Açılan pencereden **"JSON'U İNDİR"** butonuna tıklayın ve indirilen dosyanın adını **`client_secret.json`** olarak değiştirin.
+  - In Google Cloud Console, go to "APIs & Services" \> "Credentials" page.
+  - Select **"+ CREATE CREDENTIALS"** \> **"OAuth client ID"**.
+  - Choose **"Desktop application"** as **"Application type"**.
+  - Give it a name and click **CREATE**.
+  - From the popup window, click **"DOWNLOAD JSON"** button and rename the downloaded file to **`client_secret.json`**.
 
-e. **İzin Ekranını Yapılandırın:**
+e. **Configure Consent Screen:**
 
-  - Kimlik Bilgileri sayfasında, "İzin Ekranı" (OAuth consent screen) sekmesine gidin.
-  - **"+ ADD USERS"** butonuna tıklayarak bot hesabınızın e-posta adresini (`commend.ai.v1@gmail.com`) test kullanıcısı olarak ekleyin.
+  - On the Credentials page, go to "OAuth consent screen" tab.
+  - Click **"+ ADD USERS"** button to add your bot account's email address (`commend.ai.v1@gmail.com`) as a test user.
 
-### 3\. Backend'i Kurma
+### 3\. Backend Setup
 
 ```bash
-# Backend klasörüne gidin
+# Navigate to backend folder
 cd backend
 
-# Gerekli Python kütüphanelerini kurun
+# Install required Python packages
 pip install -r requirements.txt
 
-# .env dosyasını oluşturun
-# .env.example dosyasını kopyalayıp .env olarak adlandırın ve içini kendi bilgilerinizle doldurun.
+# Create .env file
+# Copy .env.example file and rename it to .env, then fill it with your information.
 ```
 
-**`.env` dosyanızın içeriği şu şekilde olmalıdır:**
+**Your `.env` file should contain:**
 
 ```
-GEMINI_API_KEY="Buraya_Google_AI_Studio'dan_aldığınız_anahtar_gelecek"
-YOUTUBE_API_KEY="Bu_alan_artik_gerekli_degil_bos_birakabilirsiniz"
-SECRET_KEY="Buraya_cok_gizli_ve_tahmin_edilemez_bir_anahtar_yazin"
-ADMIN_PASSWORD="Buraya_sadece_sizin_bileceginiz_guclu_bir_sifre_yazin"
+GEMINI_API_KEY="Your_key_from_Google_AI_Studio_goes_here"
+YOUTUBE_API_KEY="This_field_is_no_longer_needed_you_can_leave_it_empty"
+SECRET_KEY="Write_a_very_secret_and_unpredictable_key_here"
+ADMIN_PASSWORD="Write_a_strong_password_that_only_you_know_here"
 ```
 
-  - Son olarak, bir önceki adımda indirdiğiniz **`client_secret.json`** dosyasını bu `backend` klasörünün içine yerleştirin.
+  - Finally, place the **`client_secret.json`** file you downloaded in the previous step into this `backend` folder.
 
-### 4\. Frontend'i Kurma
+### 4\. Frontend Setup
 
 ```bash
-# Ana dizine geri dönün, sonra frontend klasörüne gidin
+# Go back to main directory, then navigate to frontend folder
 cd ../frontend
 
-# Gerekli Node.js paketlerini kurun
+# Install required Node.js packages
 npm install
 ```
 
-## 💻 Uygulamayı Çalıştırma
+## 💻 Running the Application
 
-### Geliştirme Ortamı
-Uygulamanın çalışması için **iki ayrı terminal** gereklidir.
+### Development Environment
+The application requires **two separate terminals** to run.
 
   - **Terminal 1 (Backend):**
 
@@ -129,11 +127,11 @@ Uygulamanın çalışması için **iki ayrı terminal** gereklidir.
     npm start
     ```
 
-Uygulama arayüzü `http://localhost:3000` adresinde açılacaktır.
+The application interface will open at `http://localhost:3000`.
 
-### 🔑 İlk Yetkilendirme (Tek Seferlik)
+### 🔑 Initial Authorization (One-time Setup)
 
-Backend'i ilk kez çalıştırdıktan sonra, uygulamadan bir işlem yapmaya çalıştığınızda (örn. yorum üretme), terminal sizden bir URL'i ziyaret ederek bot hesabınızı yetkilendirmenizi isteyecektir. Bu adımı tamamladıktan sonra projenizin `backend` dizininde bir `token.json` dosyası oluşacak ve bu adıma bir daha gerek kalmayacaktır.
+After running the backend for the first time, when you try to perform an operation from the application (e.g., generating comments), the terminal will ask you to visit a URL to authorize your bot account. After completing this step, a `token.json` file will be created in your project's `backend` directory and this step will not be needed again.
 
 ## 🚀 Production Deployment
 
@@ -217,7 +215,7 @@ Backend'i ilk kez çalıştırdıktan sonra, uygulamadan bir işlem yapmaya çal
 - Güçlü şifreler kullanın
 - Production'da HTTPS otomatik olarak aktif (Render/Vercel)
 
-## ⚙️ Kullanım
+## ⚙️ Usage
 
-  - **Ana Arayüz:** Uygulamanızın domain adresinden erişebilirsiniz
-  - **Admin Paneli:** `/admin` yoluna gidin ve `.env` dosyasında belirlediğiniz `ADMIN_PASSWORD` ile giriş yapın
+  - **Main Interface:** Access from your application's domain address
+  - **Admin Panel:** Go to `/admin` path and log in with the `ADMIN_PASSWORD` you set in the `.env` file
