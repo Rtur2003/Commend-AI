@@ -28,10 +28,18 @@ def run_migration():
         print("Installing psycopg2...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "psycopg2-binary"])
     
-    # Run the migration
+    # Run the migrations
     try:
+        print("=== Running Comment table migration ===")
         from app.migrations.add_created_at_column import migrate_database
         migrate_database()
+        print("✅ Comment table migration completed")
+        
+        print("=== Running User table migration ===")
+        from app.migrations.update_user_table import migrate_user_table
+        migrate_user_table()
+        print("✅ User table migration completed")
+        
         return True
     except Exception as e:
         print(f"Migration failed: {e}")

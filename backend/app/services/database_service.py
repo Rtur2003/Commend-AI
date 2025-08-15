@@ -107,6 +107,9 @@ def add_posted_comment(video_url, comment_text):
     if USE_DATABASE and USE_SQLALCHEMY:
         # SQLAlchemy kullan
         try:
+            # Get current user ID
+            user_id = get_user_id() if USER_TRACKING else 1
+            
             comment_id = str(uuid.uuid4())
             new_comment = Comment(
                 id=comment_id,
@@ -114,7 +117,7 @@ def add_posted_comment(video_url, comment_text):
                 video_url=video_url,
                 created_at=datetime.utcnow(),
                 posted_at=datetime.utcnow(),
-                user_id=1
+                user_id=user_id
             )
             db.session.add(new_comment)
             db.session.commit()
