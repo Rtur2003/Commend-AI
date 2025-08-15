@@ -127,8 +127,8 @@ def generate_comment_route():
                 transcript_summary = None
 
     # 6. Duplicate yorum kontrolü (generate etmeden önce uyar)
-    if check_if_url_has_posted_comment(body.video_url):
-        comment_count = get_video_comment_count(body.video_url)
+    if CommentService.check_duplicate_comment(body.video_url):
+        comment_count = CommentService.get_video_comment_count(body.video_url)
         return jsonify({
             "status": "warning", 
             "message": get_message(interface_lang, 'duplicate_warning', count=comment_count),
@@ -158,7 +158,7 @@ def generate_comment_route():
         }), 500
     
     # 8. Generate edilen yorumu history'e kaydet
-    comment_id = add_generated_comment(body.video_url, comment_text)
+    comment_id = CommentService.add_generated_comment(body.video_url, comment_text)
     
     return jsonify({
         "status": "success",
@@ -208,8 +208,8 @@ def post_comment_route():
             "user_friendly": True
         }), 400
     # Duplicate yorum kontrolü
-    if check_if_url_has_posted_comment(body.video_url):
-        comment_count = get_video_comment_count(body.video_url)
+    if CommentService.check_duplicate_comment(body.video_url):
+        comment_count = CommentService.get_video_comment_count(body.video_url)
         return jsonify({
             "status": "error", 
             "message": f"🚫 Yorum gönderilemedi!\n\nBu videoya daha önce {comment_count} kez yorum gönderildi. Sistem güvenliği ve spam önleme politikası gereği aynı videoya birden fazla yorum gönderilmesine izin verilmiyor.\n\n💡 Başka bir videoyu deneyin veya daha önce yorum yapmadığınız bir video seçin.",
@@ -250,10 +250,10 @@ def post_comment_route():
     # YENİ EKLENEN SATIR: Yorum başarıyla gönderildikten sonra veritabanına kaydet
     if body.comment_id:
         # Eğer comment_id varsa, mevcut kaydı "posted" olarak işaretle
-        mark_comment_as_posted(body.comment_id)
+        CommentService.mark_comment_as_posted(body.comment_id)
     else:
         # Eğer comment_id yoksa, yeni kayıt ekle (direct post)
-        add_posted_comment(body.video_url, body.comment_text)
+        CommentService.add_posted_comment(body.video_url, body.comment_text)
     
     # Get interface language for success message
     interface_lang = data.get('interface_language', 'tr')
@@ -263,7 +263,7 @@ def post_comment_route():
 
 @comment_routes.route('/api/history', methods=['GET'])
 def get_history_route():
-    comments = load_comments()
+    comments = CommentService.get_all_comments()
     return jsonify({
         "status": "success",
         "history": comments

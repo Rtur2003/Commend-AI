@@ -9,6 +9,7 @@ from ...core.database import db
 from .models import Comment
 from ...integrations.youtube.service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
 from ...integrations.gemini.service import generate_comment_text, summarize_transcript
+from ...modules.user.services import get_user_id
 
 
 class CommentService:
@@ -36,9 +37,16 @@ class CommentService:
             return []
     
     @staticmethod
-    def add_generated_comment(video_url: str, comment_text: str, user_id: int = 1) -> Optional[str]:
+    def add_generated_comment(video_url: str, comment_text: str, user_id: Optional[int] = None) -> Optional[str]:
         """Add a generated comment (not yet posted)"""
         try:
+            # Get current user ID if not provided
+            if user_id is None:
+                try:
+                    user_id = get_user_id()
+                except:
+                    user_id = 1  # Default fallback
+            
             comment_id = str(uuid.uuid4())
             new_comment = Comment(
                 id=comment_id,
@@ -57,9 +65,16 @@ class CommentService:
             return None
     
     @staticmethod
-    def add_posted_comment(video_url: str, comment_text: str, user_id: int = 1) -> bool:
+    def add_posted_comment(video_url: str, comment_text: str, user_id: Optional[int] = None) -> bool:
         """Add a successfully posted comment"""
         try:
+            # Get current user ID if not provided
+            if user_id is None:
+                try:
+                    user_id = get_user_id()
+                except:
+                    user_id = 1  # Default fallback
+            
             comment_id = str(uuid.uuid4())
             new_comment = Comment(
                 id=comment_id,
