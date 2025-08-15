@@ -23,10 +23,13 @@ class PostCommentRequest(BaseModel):
 @comment_routes.route('/api/generate_comment', methods=['POST'])
 @validate()
 def generate_comment_route(body: GenerateCommentRequest):
-    # 1. Video detaylarını ve istatistiklerini çek
-    details, error = get_video_details(body.video_url)
-    if error:
-        return jsonify({"status": "error", "message": error}), 500
+    try:
+        # 1. Video detaylarını ve istatistiklerini çek
+        details, error = get_video_details(body.video_url)
+        if error:
+            return jsonify({"status": "error", "message": f"Video details error: {error}"}), 500
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Exception in video details: {str(e)}"}), 500
 
     # 2. Kanal istatistiklerini çek
     if details and details.get('channel_id'):
