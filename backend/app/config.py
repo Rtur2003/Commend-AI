@@ -15,7 +15,16 @@ class Config:
         raise ValueError("SECRET_KEY environment variable is required")
 
     # --- VERİTABANI AYARLARI ---
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'app.db')
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    if DATABASE_URL:
+        # PostgreSQL için (Render'da otomatik sağlanır)
+        if DATABASE_URL.startswith('postgres://'):
+            DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+        SQLALCHEMY_DATABASE_URI = DATABASE_URL
+    else:
+        # Local development için SQLite
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'app.db')
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # --- SESSION AYARLARI ---

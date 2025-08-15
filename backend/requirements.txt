@@ -20,6 +20,7 @@ flask-pydantic==0.12.0
 # Veritabanı yönetimi (ORM)
 Flask-SQLAlchemy==3.1.1
 SQLAlchemy==2.0.31
+psycopg2-binary==2.9.7
 
 # Kullanıcı oturum yönetimi ve şifreleme
 Flask-Login==0.6.3
