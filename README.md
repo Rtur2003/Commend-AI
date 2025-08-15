@@ -22,7 +22,7 @@
   - **Frontend:** React, React Router, Axios
   - **Backend:** Python, Flask, Pydantic
   - **API'ler:** Google Gemini API, YouTube Data API v3
-  - **Veritabanı:** JSON (yorum geçmişi için)
+  - **Veritabanı:** SQLite (development), PostgreSQL (production)
   - **Kimlik Doğrulama:** Google OAuth 2.0, Flask Sessions
 
 ## Gereksinimler
@@ -136,71 +136,85 @@ Backend'i ilk kez çalıştırdıktan sonra, uygulamadan bir işlem yapmaya çal
 
 ## 🚀 Production Deployment
 
-### Backend Deployment (Heroku)
+### Backend Deployment (Render)
 
-1. **Heroku CLI kurulumu:**
+1. **Render hesabı ve proje ayarlama:**
    ```bash
-   # Heroku CLI'yi kurun: https://devcenter.heroku.com/articles/heroku-cli
-   heroku login
-   ```
-
-2. **Backend deploy:**
-   ```bash
-   cd backend
-   
-   # Git repo başlatın (eğer yoksa)
-   git init
+   # GitHub'a projeyi push edin
    git add .
-   git commit -m "Initial commit"
-   
-   # Heroku uygulaması oluşturun
-   heroku create your-app-name-backend
-   
-   # Environment variables ayarlayın
-   heroku config:set FLASK_ENV=production
-   heroku config:set SECRET_KEY="your-super-secret-key"
-   heroku config:set GEMINI_API_KEY="your-gemini-api-key"
-   heroku config:set ADMIN_PASSWORD="your-admin-password"
-   
-   # Deploy edin
-   git push heroku main
+   git commit -m "Production ready"
+   git push origin main
    ```
 
-### Frontend Deployment (Netlify/Vercel)
+2. **Render.com'da Web Service oluşturun:**
+   - [Render.com](https://render.com) hesabı açın
+   - "New Web Service" seçin
+   - GitHub repository'nizi bağlayın
+   - Ayarlar:
+     - **Name:** commend-ai-backend
+     - **Environment:** Python
+     - **Build Command:** `pip install -r requirements.txt`
+     - **Start Command:** `gunicorn -w 4 -b 0.0.0.0:$PORT "app:create_app()"`
+     - **Root Directory:** `backend`
 
-1. **Build ayarları:**
+3. **PostgreSQL Database ekleyin:**
+   - Render Dashboard'da "New PostgreSQL" seçin
+   - Database adı: `commend-ai-db`
+   - Plan: Free tier
+   - External Database URL'i kopyalayın
+
+4. **Environment Variables ayarlayın:**
    ```bash
-   cd frontend
-   
-   # Build komutu
-   npm run build
+   FLASK_ENV=production
+   SECRET_KEY=your-super-secret-key-here
+   GEMINI_API_KEY=your-gemini-api-key-here  
+   ADMIN_PASSWORD=your-admin-password-here
+   DATABASE_URL=postgresql://username:password@host:port/database
+   CLIENT_SECRET_JSON={"web":{"client_id":"...","project_id":"...","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"...","redirect_uris":["http://localhost"]}}
    ```
 
-2. **API URL güncelleme:**
-   - `src/services/api.js` dosyasında backend URL'ini production URL'i ile değiştirin:
-   ```javascript
-   const API_BASE_URL = 'https://your-app-name-backend.herokuapp.com';
-   ```
+### Frontend Deployment (Vercel)
 
-3. **Netlify ile deploy:**
-   - Build folder: `build`
-   - Build command: `npm run build`
-   - Publish directory: `build`
+1. **Vercel hesabı ve deploy:**
+   - [Vercel.com](https://vercel.com) hesabı açın
+   - "New Project" seçin  
+   - GitHub repository'nizi bağlayın
+   - Ayarlar:
+     - **Framework Preset:** Create React App
+     - **Root Directory:** `frontend`
+     - **Build Command:** `npm run build`
+     - **Output Directory:** `build`
 
-### Güvenlik Kontrol Listesi
+2. **API URL otomatik ayarlandı:**
+   - Production ve development URL'leri `src/services/api.js`'de ayarlandı
+   - Production: `https://commend-ai-backend.onrender.com/api`
+   - Development: `http://127.0.0.1:5000/api`
+
+### Live Deployment URLs
+
+🌐 **Frontend (Vercel):** https://commend-ai-frontend.vercel.app  
+⚙️ **Backend API (Render):** https://commend-ai-backend.onrender.com  
+📊 **Health Check:** https://commend-ai-backend.onrender.com/api/test
+
+### Güvenlik ve Deployment Kontrol Listesi
 
 ✅ **Tamamlandı:**
 - SECRET_KEY environment variable olarak ayarlandı
 - ADMIN_PASSWORD environment variable olarak ayarlandı  
 - Session cookies production'da güvenli
-- Gemini model adı düzeltildi
-- Production dependencies eklendi
+- Gemini model adı düzeltildi (`gemini-1.5-flash`)
+- Production dependencies eklendi (PostgreSQL, Gunicorn)
+- SQLite → PostgreSQL migration tamamlandı
+- CORS ayarları production için yapılandırıldı
+- Environment variables için JSON parsing ve error handling eklendi
+- Frontend ve Backend başarıyla deploy edildi
 
 ⚠️ **Manuel Kontrol Gerekli:**
 - `.env` dosyası git'e commit edilmemeli
 - `client_secret.json` dosyası git'e commit edilmemeli  
-- Production'da HTTPS kullanın
+- CLIENT_SECRET_JSON environment variable'ı tek satırda, kontrol karakterleri olmadan ayarlanmalı
 - Güçlü şifreler kullanın
+- Production'da HTTPS otomatik olarak aktif (Render/Vercel)
 
 ## ⚙️ Kullanım
 
