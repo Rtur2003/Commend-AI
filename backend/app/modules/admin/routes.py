@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
-from ..config import Config
+from ...core.config import Config
 import jwt
 import datetime
 from functools import wraps
-from .. import db
-from ..models.ad import Ad
+from ...core.database import db
+from ..ads.models import Ad
 
 # Blueprint'i /api/admin prefix'i ile oluştur
 admin_routes = Blueprint('admin', __name__, url_prefix='/api/admin')

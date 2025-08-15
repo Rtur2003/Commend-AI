@@ -1,4 +1,4 @@
-from .. import db
+from ...core.database import db
 from datetime import datetime
 
 class Ad(db.Model):

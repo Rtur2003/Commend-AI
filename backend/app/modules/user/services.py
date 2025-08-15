@@ -1,7 +1,7 @@
-# backend/app/services/user_service.py
+# User services
 from flask import session, request
-from ..models.user import User
-from .. import db
+from .models import User
+from ...core.database import db
 import uuid
 
 def get_current_user():

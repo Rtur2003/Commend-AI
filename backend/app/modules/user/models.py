@@ -1,5 +1,5 @@
-# backend/app/models/user.py
-from .. import db # __init__.py dosyasında oluşturacağımız db nesnesi
+# User model
+from ...core.database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 

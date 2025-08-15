@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from ..models.ad import Ad
+from ..ads.models import Ad
 
 public_routes = Blueprint('public', __name__)
 
