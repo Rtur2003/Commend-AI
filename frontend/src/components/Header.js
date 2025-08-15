@@ -43,6 +43,8 @@ const Header = () => {
       </div>
       <nav className="main-nav">
         <Link to="/">{t('homeNav')}</Link>
+        <Link to="/features">Features</Link>
+        <Link to="/faq">FAQ</Link>
         <div 
           className={`language-selector ${isDropdownOpen ? 'open' : ''}`}
           ref={dropdownRef}

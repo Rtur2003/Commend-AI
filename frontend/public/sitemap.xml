@@ -1,15 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage - Main landing page -->
   <url>
     <loc>https://commend-ai.vercel.app/</loc>
     <lastmod>2025-08-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://commend-ai.vercel.app/logo512.png</image:loc>
+      <image:caption>CommendAI - AI YouTube Comment Generator</image:caption>
+    </image:image>
   </url>
+  
+  <!-- Features page - Product information -->
+  <url>
+    <loc>https://commend-ai.vercel.app/features</loc>
+    <lastmod>2025-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://commend-ai.vercel.app/logo512.png</image:loc>
+      <image:caption>CommendAI Features - AI-powered comment generation</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- FAQ page - Help and support -->
+  <url>
+    <loc>https://commend-ai.vercel.app/faq</loc>
+    <lastmod>2025-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://commend-ai.vercel.app/logo512.png</image:loc>
+      <image:caption>CommendAI FAQ - Frequently Asked Questions</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Admin page - Low priority, not for public discovery -->
   <url>
     <loc>https://commend-ai.vercel.app/admin</loc>
     <lastmod>2025-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
   </url>
+  
 </urlset>

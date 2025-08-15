@@ -4,7 +4,7 @@ import { generateComment, postCommentToYouTube, getHistory } from '../services/a
 import CommentForm from '../components/CommentForm';
 import ResultDisplay from '../components/ResultDisplay';
 import HistoryPanel from '../components/HistoryPanel';
-import SEOHead from '../components/SEOHead';
+import EnhancedSEOHead from '../shared/components/seo/EnhancedSEOHead';
 import { motion } from 'framer-motion';
 import AdBanner from '../components/AdBanner';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -160,7 +160,7 @@ function HomePage() {
   // --- RENDER ---
   return (
     <>
-      <SEOHead />
+      <EnhancedSEOHead />
       <motion.div
         className="container"
         initial={{ opacity: 0, y: 20 }} // Başlangıç durumu: görünmez ve 20px aşağıda
