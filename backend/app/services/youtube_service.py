@@ -63,8 +63,19 @@ def get_authenticated_service():
                 raise Exception("OAuth token geçersiz. Local ortamda yeniden authorize edin.")
         return build('youtube', 'v3', credentials=creds)
     
-    # Ne token.json var ne de TOKEN_JSON environment variable
-    raise Exception("YouTube API kimlik doğrulaması bulunamadı. TOKEN_JSON environment variable'ı ayarlayın.")
+    # Eğer client_secret.json varsa OAuth akışını başlat
+    if os.path.exists(CLIENT_SECRETS_FILE):
+        print("OAuth authorization başlatılıyor...")
+        flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
+        creds = flow.run_local_server(port=0)
+        # Token'ı kaydet
+        with open(TOKEN_FILE, 'w') as token:
+            token.write(creds.to_json())
+        print(f"OAuth başarılı! Token {TOKEN_FILE} dosyasına kaydedildi.")
+        return build('youtube', 'v3', credentials=creds)
+    
+    # Ne token.json var ne de TOKEN_JSON environment variable ne de client_secret.json
+    raise Exception("YouTube API kimlik doğrulaması bulunamadı. client_secret.json dosyası veya TOKEN_JSON environment variable'ı gerekli.")
 
 def get_video_details(video_url):
     """Verilen YouTube URL'sinden metinsel, istatistiksel ve içerik detaylarını çeker."""

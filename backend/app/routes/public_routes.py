@@ -21,6 +21,24 @@ def test_env():
         "flask_env": os.getenv('FLASK_ENV', 'not set')
     })
 
+@public_routes.route('/api/test-youtube', methods=['GET'])
+def test_youtube():
+    """Test YouTube API authentication."""
+    try:
+        from ..services.youtube_service import get_authenticated_service
+        service = get_authenticated_service()
+        return jsonify({
+            "status": "success",
+            "message": "YouTube API authentication successful",
+            "service_available": service is not None
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "error_type": type(e).__name__
+        }), 500
+
 @public_routes.route('/api/public/active-ads', methods=['GET'])
 def get_active_ads():
     """Returns a list of all active ads."""
