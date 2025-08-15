@@ -52,11 +52,12 @@ Based on your analysis, adapt your writing style:
 - **For less popular videos/channels:** Be more encouraging and supportive. Highlight their unique strengths.
 - **For serious/somber topics:** Be empathetic and respectful. Avoid hyperbole.
 - **For humorous/exciting topics:** Be witty, passionate, and use creative exaggeration.
+- **Design a realistic comment without too long sentence structures.
 
 ### GENERAL RULES (Apply to all tones) ###
 1.  **Be Specific:** Reference a specific detail from the video.
 2.  **Language:** The ENTIRE comment MUST be in **{language}**.
-3.  **Disclaimer:** On a new line, after the comment, you MUST add a disclaimer (e.g., "Not: Bu yorum bir yapay zeka tarafından oluşturulmuştur.").
+3.  **Disclaimer:** On a new line, after the comment, you MUST add a disclaimer and use this **{language}** (e.g., "Not: Bu yorum bir yapay zeka tarafından oluşturulmuştur.").
 
 ### YOUR TASK ###
 Following all steps, write a high-quality, context-aware YouTube comment in **{language}**.
