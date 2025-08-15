@@ -16,6 +16,13 @@ def create_app(config_class=Config):
     
     # Yapılandırmayı yükle
     app.config.from_object(config_class)
+    
+    # API anahtarlarını doğrula
+    try:
+        config_class.validate_api_keys()
+    except ValueError as e:
+        print(f"Configuration error: {e}")
+        raise
 
     # Eklentileri uygulamayla ilişkilendir
     db.init_app(app)
@@ -50,8 +57,14 @@ def create_app(config_class=Config):
             print(f"An unhandled error occurred: {e}")
             response = {
                 "status": "error",
-                "message": "Sunucuda beklenmedik bir hata oluştu."
+                "message": "Sunucuda beklenmedik bir hata oluştu.",
+                "author": config_class.get_author_info()["author"]
             }
             return jsonify(response), 500
+        
+        # Uygulama bilgilerini döndüren endpoint
+        @app.route('/api/info')
+        def app_info():
+            return jsonify(config_class.get_author_info())
             
         return app

@@ -6,6 +6,7 @@ const Header = () => {
     <header className="app-header">
       <div className="logo">
         <Link to="/">CommendAI</Link>
+        <span className="author-badge">by Hasan Arthur Altuntaş</span>
       </div>
       <nav className="main-nav">
         <Link to="/">Home</Link>

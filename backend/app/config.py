@@ -13,6 +13,25 @@ class Config:
     
     if not SECRET_KEY:
         raise ValueError("SECRET_KEY environment variable is required")
+    
+    # Güvenlik kontrolleri
+    @staticmethod
+    def validate_api_keys():
+        """API anahtarlarının geçerliliğini kontrol eder"""
+        if not os.getenv('GEMINI_API_KEY'):
+            raise ValueError("GEMINI_API_KEY is required for AI functionality")
+        if not os.getenv('YOUTUBE_API_KEY'):
+            raise ValueError("YOUTUBE_API_KEY is required for YouTube integration")
+    
+    @staticmethod
+    def get_author_info():
+        """Proje yazarı bilgilerini döndürür"""
+        return {
+            "author": "Hasan Arthur Altuntaş",
+            "project": "Commend AI",
+            "version": "1.0.0",
+            "created": "2025"
+        }
 
     # --- VERİTABANI AYARLARI ---
     DATABASE_URL = os.getenv('DATABASE_URL')

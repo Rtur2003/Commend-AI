@@ -2,6 +2,7 @@
 -----
 
 # CommendAI v2.0
+**Geliştirici: Hasan Arthur Altuntaş**
 
 > YouTube için yapay zeka destekli, stil sahibi yorumlar üreten ve bu yorumları sizin adınıza gönderen kişisel bir web uygulaması.
 

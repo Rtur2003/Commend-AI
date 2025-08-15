@@ -392,6 +392,15 @@ button:disabled {
   font-weight: bold;
 }
 
+.app-header .author-badge {
+  color: var(--label-color);
+  font-size: 0.8rem;
+  margin-left: 10px;
+  padding: 2px 8px;
+  background-color: var(--border-color);
+  border-radius: 12px;
+}
+
 .app-header .main-nav a {
   color: var(--text-color);
   text-decoration: none;
