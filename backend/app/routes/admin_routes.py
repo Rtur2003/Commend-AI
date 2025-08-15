@@ -145,3 +145,40 @@ def toggle_ad(ad_id):
     ad.is_active = not ad.is_active
     db.session.commit()
     return jsonify({"status": "success", "message": f"Ad status changed to {'active' if ad.is_active else 'inactive'}."})
+
+# --- DATABASE MIGRATION ENDPOINT ---
+@admin_routes.route('/run-migration', methods=['POST'])
+@admin_required
+def run_migration():
+    """Database migration'ını çalıştırır."""
+    try:
+        # Import migration functions
+        from ..migrations.add_created_at_column import migrate_database
+        from ..migrations.update_user_table import migrate_user_table
+        
+        output = []
+        
+        # Run Comment table migration
+        output.append("=== Running Comment table migration ===")
+        result1 = migrate_database()
+        output.append("✅ Comment table migration completed")
+        
+        # Run User table migration
+        output.append("=== Running User table migration ===")
+        result2 = migrate_user_table()
+        output.append("✅ User table migration completed")
+        
+        output.append("🎉 All migrations completed successfully!")
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Migration completed successfully', 
+            'output': '\n'.join(output)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Migration failed: {str(e)}',
+            'error': str(e)
+        }), 500
