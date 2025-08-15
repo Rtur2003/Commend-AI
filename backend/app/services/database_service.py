@@ -35,8 +35,52 @@ def add_posted_comment(video_url, comment_text):
 def check_if_url_has_posted_comment(video_url):
     """Verilen URL için daha önce gönderilmiş bir yorum olup olmadığını kontrol eder."""
     comments = load_comments()
+    
+    # URL'yi normalize et (farklı formatlar için)
+    normalized_url = normalize_youtube_url(video_url)
+    
     for comment in comments:
-        # Sadece URL'nin eşleşip eşleşmediğini kontrol etmemiz yeterli
-        if comment.get('video_url') == video_url:
+        stored_url = comment.get('video_url', '')
+        stored_normalized = normalize_youtube_url(stored_url)
+        
+        # Normalize edilmiş URL'leri karşılaştır
+        if stored_normalized == normalized_url:
             return True
     return False
+
+def normalize_youtube_url(url):
+    """YouTube URL'lerini standart formata çevirir."""
+    import re
+    
+    if not url:
+        return ""
+    
+    # Video ID'sini çıkar
+    video_id_patterns = [
+        r'(?:v=|/)([0-9A-Za-z_-]{11}).*',
+        r'(?:embed/)([0-9A-Za-z_-]{11})',
+        r'(?:watch\?v=)([0-9A-Za-z_-]{11})',
+        r'(?:youtu\.be/)([0-9A-Za-z_-]{11})'
+    ]
+    
+    for pattern in video_id_patterns:
+        match = re.search(pattern, url)
+        if match:
+            video_id = match.group(1)
+            return f"https://www.youtube.com/watch?v={video_id}"
+    
+    # Hiçbir pattern eşleşmezse orijinal URL'i döndür
+    return url
+
+def get_video_comment_count(video_url):
+    """Belirli bir videoya yapılan yorum sayısını döndürür."""
+    comments = load_comments()
+    normalized_url = normalize_youtube_url(video_url)
+    
+    count = 0
+    for comment in comments:
+        stored_normalized = normalize_youtube_url(comment.get('video_url', ''))
+        if stored_normalized == normalized_url:
+            count += 1
+    
+    return count

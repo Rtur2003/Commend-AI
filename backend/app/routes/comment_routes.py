@@ -4,7 +4,7 @@ from flask_pydantic import validate
 from typing import Literal
 from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details
 from ..services.gemini_service import generate_comment_text
-from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment
+from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, get_video_comment_count
 import re
 
 
@@ -73,21 +73,39 @@ def generate_comment_route():
     if video_id:
         existing_comments, _ = get_video_comments(video_id, max_results=10)
 
-    # 4. Tüm verilerle Gemini'den yorum üret
+    # 4. Duplicate yorum kontrolü (generate etmeden önce uyar)
+    if check_if_url_has_posted_comment(body.video_url):
+        comment_count = get_video_comment_count(body.video_url)
+        return jsonify({
+            "status": "warning", 
+            "message": f"Bu videoya daha önce {comment_count} yorum gönderdiniz. Yeni yorum oluşturabilirsiniz ama gönderilemez.",
+            "comment_count": comment_count,
+            "can_generate": True,
+            "can_post": False
+        }), 200
+
+    # 5. Tüm verilerle Gemini'den yorum üret
     comment_text, error = generate_comment_text(details, body.comment_style, body.language, existing_comments)
     if error:
         return jsonify({"status": "error", "message": error}), 500
-   # CORRECT
+    
     return jsonify({
         "status": "success",
-        "generated_text": comment_text
+        "generated_text": comment_text,
+        "can_post": True
     })
 
 @comment_routes.route('/api/post_comment', methods=['POST'])
 @validate()
 def post_comment_route(body: PostCommentRequest):
+    # Duplicate yorum kontrolü
     if check_if_url_has_posted_comment(body.video_url):
-        return jsonify({"status": "error", "message": "Bu videoya daha önce zaten bir yorum gönderdiniz."}), 409
+        comment_count = get_video_comment_count(body.video_url)
+        return jsonify({
+            "status": "error", 
+            "message": f"Bu videoya daha önce {comment_count} yorum gönderdiniz. Aynı videoya birden fazla yorum gönderilemez.",
+            "comment_count": comment_count
+        }), 409
 
     video_id_match = re.search(r"(?<=v=)[^&#]+", body.video_url) or re.search(r"(?<=be/)[^&#]+", body.video_url)
     if not video_id_match:

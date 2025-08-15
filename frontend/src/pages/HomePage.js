@@ -44,10 +44,26 @@ function HomePage() {
     setError(null);
 
     try {
-      const commentText = await generateComment(videoUrl, language);
+      const response = await generateComment(videoUrl, language);
+      
+      // Backend'den gelen response'u kontrol et
+      if (response.status === 'warning') {
+        setStatusMessage(`⚠️ ${response.message}`);
+        setError(`Bu videoya daha önce yorum gönderilmiş. Yeni yorum oluşturabilirsiniz ancak gönderilemez.`);
+        
+        // Yorum generate edilmemişse hiçbir şey yapma
+        if (!response.generated_text) {
+          return;
+        }
+      }
+      
+      const commentText = response.generated_text || response;
       setGeneratedComment(commentText);
       setOriginalComment(commentText);
-      setStatusMessage('✅ Comment generated! You can edit it before posting.');
+      
+      if (response.status !== 'warning') {
+        setStatusMessage('✅ Comment generated! You can edit it before posting.');
+      }
     } catch (err) {
       const errorMessage = err.response?.data?.message || "An unknown error occurred.";
       setError(errorMessage);
