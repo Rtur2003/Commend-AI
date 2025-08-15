@@ -12,7 +12,18 @@ import isodate # Videonun süresini parse etmek için
 
 def get_authenticated_service():
     """OAuth 2.0 ile YouTube API kimlik doğrulaması yapar ve servis nesnesini döndürür."""
-    CLIENT_SECRETS_FILE = 'client_secret.json'
+    import json
+    import tempfile
+    
+    # Environment variable'dan client secret'ı oku
+    CLIENT_SECRET_JSON = os.getenv('CLIENT_SECRET_JSON')
+    if CLIENT_SECRET_JSON:
+        # Temporary file oluştur
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp_file:
+            temp_file.write(CLIENT_SECRET_JSON)
+            CLIENT_SECRETS_FILE = temp_file.name
+    else:
+        CLIENT_SECRETS_FILE = 'client_secret.json'
 
     # OAuth kimlik bilgilerini depolayacak dosyanın adı
     TOKEN_FILE = 'token.json'
