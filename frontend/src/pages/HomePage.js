@@ -12,7 +12,6 @@ function HomePage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [language, setLanguage] = useState('Turkish');
   const [generatedComment, setGeneratedComment] = useState('');
-  const [originalComment, setOriginalComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [statusMessage, setStatusMessage] = useState('Ready to generate a new comment.');
@@ -39,7 +38,6 @@ function HomePage() {
     e.preventDefault();
     setIsLoading(true);
     setGeneratedComment('');
-    setOriginalComment('');
     setStatusMessage('🧠 AI is thinking... Please wait.');
     setError(null);
 
@@ -59,10 +57,9 @@ function HomePage() {
       
       const commentText = response.generated_text || response;
       setGeneratedComment(commentText);
-      setOriginalComment(commentText);
       
       if (response.status !== 'warning') {
-        setStatusMessage('✅ Comment generated! You can edit it before posting.');
+        setStatusMessage('✅ Comment generated! Ready to post to YouTube.');
       }
     } catch (err) {
       const errorMessage = err.response?.data?.message || "An unknown error occurred.";
@@ -84,7 +81,6 @@ function HomePage() {
       alert('Yorum başarıyla gönderildi!');
       setStatusMessage('✅ Comment posted successfully! Ready for the next one.');
       setGeneratedComment('');
-      setOriginalComment('');
       fetchHistory(); // Geçmişi yenile
     } catch (err) {
       const errorMessage = err.response?.data?.message || "An unknown error occurred.";
@@ -103,8 +99,7 @@ function HomePage() {
 
   const handleUseHistoryItem = (text) => {
     setGeneratedComment(text);
-    setOriginalComment(text);
-    setStatusMessage('📋 Comment loaded from history. You can edit and post.');
+    setStatusMessage('📋 Comment loaded from history. Ready to post.');
     setError(null);
   };
 
@@ -140,17 +135,14 @@ function HomePage() {
 
         
 
-        {originalComment && (
+        {generatedComment && (
           <ResultDisplay
             generatedComment={generatedComment}
-            setGeneratedComment={setGeneratedComment}
-            originalComment={originalComment}
             handlePostComment={handlePostComment}
             copyToClipboard={copyToClipboard}
             isLoading={isLoading}
             isPosting={isPosting}
           />
-          
         )}
         
         <AdBanner position="bottom" />

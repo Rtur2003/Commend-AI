@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify
 from pydantic import BaseModel, Field
 from flask_pydantic import validate
 from typing import Literal
-from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details
-from ..services.gemini_service import generate_comment_text
+from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
+from ..services.gemini_service import generate_comment_text, summarize_transcript
 from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, get_video_comment_count
 import re
 
@@ -66,14 +66,25 @@ def generate_comment_route():
         if channel_stats:
             details.update(channel_stats) # Kanal istatistiklerini ana 'details' sözlüğüne ekle
 
-    # 3. Mevcut yorumları çek
+    # 3. Video ID'sini çıkar
     video_id_match = re.search(r"(?<=v=)[^&#]+", body.video_url) or re.search(r"(?<=be/)[^&#]+", body.video_url)
     video_id = video_id_match.group(0) if video_id_match else None
+    
+    # 4. Mevcut yorumları çek
     existing_comments = []
     if video_id:
         existing_comments, _ = get_video_comments(video_id, max_results=10)
+    
+    # 5. Video transcript'ini çek ve özetle
+    transcript_summary = None
+    if video_id:
+        transcript_text, transcript_error = get_video_transcript(video_id)
+        if transcript_text and not transcript_error:
+            transcript_summary, summary_error = summarize_transcript(transcript_text, body.language)
+            if summary_error:
+                transcript_summary = None
 
-    # 4. Duplicate yorum kontrolü (generate etmeden önce uyar)
+    # 6. Duplicate yorum kontrolü (generate etmeden önce uyar)
     if check_if_url_has_posted_comment(body.video_url):
         comment_count = get_video_comment_count(body.video_url)
         return jsonify({
@@ -84,8 +95,8 @@ def generate_comment_route():
             "can_post": False
         }), 200
 
-    # 5. Tüm verilerle Gemini'den yorum üret
-    comment_text, error = generate_comment_text(details, body.comment_style, body.language, existing_comments)
+    # 7. Tüm verilerle Gemini'den yorum üret (transcript özeti dahil)
+    comment_text, error = generate_comment_text(details, body.comment_style, body.language, existing_comments, transcript_summary)
     if error:
         return jsonify({"status": "error", "message": error}), 500
     

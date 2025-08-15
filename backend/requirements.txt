@@ -28,3 +28,6 @@ Werkzeug==3.0.3
 PyJWT==2.8.0
 Flask-Session==0.5.0
 isodate==0.6.1
+
+# YouTube transcript API
+youtube-transcript-api==0.6.2

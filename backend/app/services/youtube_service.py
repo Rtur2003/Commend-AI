@@ -183,3 +183,39 @@ def get_video_comments(video_id, max_results=20):
     except Exception as e:
         print(f"Yorumlar alınırken hata oluştu: {e}")
         return None, "Videodan yorumlar alınırken bir hata oluştu."
+
+def get_video_transcript(video_id):
+    """Video için transcript/altyazı çeker (eğer varsa)."""
+    try:
+        # YouTube API v3 doğrudan transcript desteği sunmuyor
+        # Bu durumda youtube-transcript-api kullanabiliriz
+        from youtube_transcript_api import YouTubeTranscriptApi
+        
+        # Türkçe altyazı öncelikli, yoksa İngilizce, yoksa otomatik
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+        
+        try:
+            # Önce Türkçe dene
+            transcript = transcript_list.find_transcript(['tr'])
+        except:
+            try:
+                # Türkçe yoksa İngilizce dene
+                transcript = transcript_list.find_transcript(['en'])
+            except:
+                try:
+                    # İngilizce de yoksa otomatik olanı al
+                    transcript = transcript_list.find_generated_transcript(['tr', 'en'])
+                except:
+                    return None, "Bu video için altyazı bulunamadı"
+        
+        # Transcript verilerini al
+        transcript_data = transcript.fetch()
+        
+        # Metni birleştir
+        full_text = ' '.join([entry['text'] for entry in transcript_data])
+        
+        return full_text, None
+        
+    except Exception as e:
+        print(f"Transcript alınırken hata: {e}")
+        return None, "Transcript alınamadı"
