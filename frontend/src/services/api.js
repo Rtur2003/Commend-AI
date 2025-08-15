@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-backend-url.herokuapp.com/api' 
+  ? 'https://commend-ai-backend.onrender.com/api' 
   : 'http://127.0.0.1:5000/api';
 
 // Token işlemleri
