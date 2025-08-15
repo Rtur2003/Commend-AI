@@ -9,18 +9,24 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 class Config:
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
     YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
-    SECRET_KEY = os.getenv('SECRET_KEY', 'varsayilan-gizli-anahtar-degistir')
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    
+    if not SECRET_KEY:
+        raise ValueError("SECRET_KEY environment variable is required")
 
     # --- VERİTABANI AYARLARI ---
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # --- SESSION AYARLARI ---
-    SESSION_COOKIE_SECURE = False  # Development için False, production'da True
-    SESSION_COOKIE_HTTPONLY = False  # JavaScript erişimi için False
-    SESSION_COOKIE_SAMESITE = None   # Cross-origin için None
+    SESSION_COOKIE_SECURE = os.getenv('FLASK_ENV') == 'production'
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_PERMANENT = False
     PERMANENT_SESSION_LIFETIME = 3600  # 1 saat (saniye cinsinden)
     
     # --- ADMIN ŞIFRE ---
-    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin123')  # Varsayılan şifre
+    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+    
+    if not ADMIN_PASSWORD:
+        raise ValueError("ADMIN_PASSWORD environment variable is required")

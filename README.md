@@ -111,6 +111,7 @@ npm install
 
 ## 💻 Uygulamayı Çalıştırma
 
+### Geliştirme Ortamı
 Uygulamanın çalışması için **iki ayrı terminal** gereklidir.
 
   - **Terminal 1 (Backend):**
@@ -133,7 +134,75 @@ Uygulama arayüzü `http://localhost:3000` adresinde açılacaktır.
 
 Backend'i ilk kez çalıştırdıktan sonra, uygulamadan bir işlem yapmaya çalıştığınızda (örn. yorum üretme), terminal sizden bir URL'i ziyaret ederek bot hesabınızı yetkilendirmenizi isteyecektir. Bu adımı tamamladıktan sonra projenizin `backend` dizininde bir `token.json` dosyası oluşacak ve bu adıma bir daha gerek kalmayacaktır.
 
+## 🚀 Production Deployment
+
+### Backend Deployment (Heroku)
+
+1. **Heroku CLI kurulumu:**
+   ```bash
+   # Heroku CLI'yi kurun: https://devcenter.heroku.com/articles/heroku-cli
+   heroku login
+   ```
+
+2. **Backend deploy:**
+   ```bash
+   cd backend
+   
+   # Git repo başlatın (eğer yoksa)
+   git init
+   git add .
+   git commit -m "Initial commit"
+   
+   # Heroku uygulaması oluşturun
+   heroku create your-app-name-backend
+   
+   # Environment variables ayarlayın
+   heroku config:set FLASK_ENV=production
+   heroku config:set SECRET_KEY="your-super-secret-key"
+   heroku config:set GEMINI_API_KEY="your-gemini-api-key"
+   heroku config:set ADMIN_PASSWORD="your-admin-password"
+   
+   # Deploy edin
+   git push heroku main
+   ```
+
+### Frontend Deployment (Netlify/Vercel)
+
+1. **Build ayarları:**
+   ```bash
+   cd frontend
+   
+   # Build komutu
+   npm run build
+   ```
+
+2. **API URL güncelleme:**
+   - `src/services/api.js` dosyasında backend URL'ini production URL'i ile değiştirin:
+   ```javascript
+   const API_BASE_URL = 'https://your-app-name-backend.herokuapp.com';
+   ```
+
+3. **Netlify ile deploy:**
+   - Build folder: `build`
+   - Build command: `npm run build`
+   - Publish directory: `build`
+
+### Güvenlik Kontrol Listesi
+
+✅ **Tamamlandı:**
+- SECRET_KEY environment variable olarak ayarlandı
+- ADMIN_PASSWORD environment variable olarak ayarlandı  
+- Session cookies production'da güvenli
+- Gemini model adı düzeltildi
+- Production dependencies eklendi
+
+⚠️ **Manuel Kontrol Gerekli:**
+- `.env` dosyası git'e commit edilmemeli
+- `client_secret.json` dosyası git'e commit edilmemeli  
+- Production'da HTTPS kullanın
+- Güçlü şifreler kullanın
+
 ## ⚙️ Kullanım
 
-  - **Ana Arayüz:** `http://localhost:3000` adresinden uygulamayı kullanabilirsiniz.
-  - **Admin Paneli:** `http://localhost:3000/admin` adresine gidin ve `.env` dosyasında belirlediğiniz `ADMIN_PASSWORD` ile giriş yapın.
+  - **Ana Arayüz:** Uygulamanızın domain adresinden erişebilirsiniz
+  - **Admin Paneli:** `/admin` yoluna gidin ve `.env` dosyasında belirlediğiniz `ADMIN_PASSWORD` ile giriş yapın
