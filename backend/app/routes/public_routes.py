@@ -8,6 +8,17 @@ def health_check():
     """Health check endpoint."""
     return jsonify({"status": "ok", "message": "CommendAI Backend is running!"})
 
+@public_routes.route('/api/test', methods=['GET'])
+def test_env():
+    """Test environment variables."""
+    import os
+    return jsonify({
+        "status": "ok",
+        "has_gemini_key": bool(os.getenv('GEMINI_API_KEY')),
+        "has_secret_key": bool(os.getenv('SECRET_KEY')),
+        "flask_env": os.getenv('FLASK_ENV', 'not set')
+    })
+
 @public_routes.route('/api/public/active-ads', methods=['GET'])
 def get_active_ads():
     """Returns a list of all active ads."""
