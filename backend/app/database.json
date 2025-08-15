@@ -1,3 +1,25 @@
 {
-    "comments": []
+    "comments": [
+        {
+            "id": "sample-comment-1",
+            "text": "Great video! Thanks for sharing this amazing content.",
+            "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "created_at": "2025-08-15T12:00:00Z",
+            "posted_at": "2025-08-15T12:05:00Z"
+        },
+        {
+            "id": "sample-comment-2", 
+            "text": "This is really helpful, I learned a lot from this video!",
+            "video_url": "https://www.youtube.com/watch?v=test123",
+            "created_at": "2025-08-15T11:30:00Z",
+            "posted_at": null
+        },
+        {
+            "id": "test-duplicate-comment",
+            "text": "Bu videoya daha önce yorum yaptım.",
+            "video_url": "https://www.youtube.com/watch?v=testDuplicate",
+            "created_at": "2025-08-15T10:00:00Z",
+            "posted_at": "2025-08-15T10:05:00Z"
+        }
+    ]
 }

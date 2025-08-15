@@ -31,14 +31,21 @@ export const generateComment = async (videoUrl, language) => {
     language: language,
     comment_style: 'default'
   });
-  return response.data.generated_text;
+  return response.data; // Tüm response'u döndür (comment_id dahil)
 };
 
-export const postCommentToYouTube = async (videoUrl, commentText) => {
-  const response = await axios.post(`${API_URL}/post_comment`, {
+export const postCommentToYouTube = async (videoUrl, commentText, commentId = null) => {
+  const requestData = {
     video_url: videoUrl,
     comment_text: commentText
-  });
+  };
+  
+  // Eğer commentId varsa ekle
+  if (commentId) {
+    requestData.comment_id = commentId;
+  }
+  
+  const response = await axios.post(`${API_URL}/post_comment`, requestData);
   return response.data;
 };
 

@@ -20,6 +20,20 @@ def save_comments(comments):
     with open(DB_PATH, 'w', encoding='utf-8') as f:
         json.dump({"comments": comments}, f, ensure_ascii=False, indent=4)
 
+def add_generated_comment(video_url, comment_text):
+    """Generate edilen yorumu listeye ekler ve kaydeder (henüz gönderilmemiş)."""
+    comments = load_comments()
+    new_comment = {
+        "id": str(uuid.uuid4()),
+        "text": comment_text,
+        "video_url": video_url,
+        "created_at": datetime.utcnow().isoformat() + "Z", # Generate edildiği zaman
+        "posted_at": None  # Henüz gönderilmemiş
+    }
+    comments.insert(0, new_comment)
+    save_comments(comments)
+    return new_comment["id"]
+
 def add_posted_comment(video_url, comment_text):
     """BAŞARIYLA GÖNDERİLMİŞ bir yorumu listeye ekler ve kaydeder."""
     comments = load_comments()
@@ -27,9 +41,19 @@ def add_posted_comment(video_url, comment_text):
         "id": str(uuid.uuid4()),
         "text": comment_text,
         "video_url": video_url,
+        "created_at": datetime.utcnow().isoformat() + "Z",
         "posted_at": datetime.utcnow().isoformat() + "Z" # Yorumun gönderildiği zaman
     }
     comments.insert(0, new_comment)
+    save_comments(comments)
+
+def mark_comment_as_posted(comment_id):
+    """Mevcut bir yorumu gönderilmiş olarak işaretler."""
+    comments = load_comments()
+    for comment in comments:
+        if comment.get("id") == comment_id:
+            comment["posted_at"] = datetime.utcnow().isoformat() + "Z"
+            break
     save_comments(comments)
 
 def check_if_url_has_posted_comment(video_url):

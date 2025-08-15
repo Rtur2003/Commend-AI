@@ -4,7 +4,7 @@ from flask_pydantic import validate
 from typing import Literal
 from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
 from ..services.gemini_service import generate_comment_text, summarize_transcript
-from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, get_video_comment_count
+from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, add_generated_comment, mark_comment_as_posted, get_video_comment_count
 import re
 
 
@@ -19,6 +19,7 @@ class GenerateCommentRequest(BaseModel):
 class PostCommentRequest(BaseModel):
     video_url: str = Field(..., min_length=15)
     comment_text: str = Field(..., min_length=1)
+    comment_id: str = Field(None, description="Generated comment ID if available")
 
 @comment_routes.route('/api/generate_comment', methods=['POST'])
 def generate_comment_route():
@@ -154,15 +155,50 @@ def generate_comment_route():
             "user_friendly": True
         }), 500
     
+    # 8. Generate edilen yorumu history'e kaydet
+    comment_id = add_generated_comment(body.video_url, comment_text)
+    
     return jsonify({
         "status": "success",
         "generated_text": comment_text,
+        "comment_id": comment_id,
         "can_post": True
     })
 
 @comment_routes.route('/api/post_comment', methods=['POST'])
-@validate()
-def post_comment_route(body: PostCommentRequest):
+def post_comment_route():
+    from flask import request
+    
+    # Manuel validation
+    data = request.get_json()
+    if not data:
+        return jsonify({
+            "status": "error", 
+            "message": "📡 Veri gönderilmedi!",
+            "user_friendly": True
+        }), 400
+    
+    # Validate required fields
+    if 'video_url' not in data or 'comment_text' not in data:
+        return jsonify({
+            "status": "error", 
+            "message": "📝 Eksik bilgi! Video URL'si ve yorum metni gerekli.",
+            "user_friendly": True
+        }), 400
+        
+    # Create validated object
+    try:
+        body = PostCommentRequest(
+            video_url=data['video_url'],
+            comment_text=data['comment_text'],
+            comment_id=data.get('comment_id', None)
+        )
+    except Exception as validation_error:
+        return jsonify({
+            "status": "error", 
+            "message": f"📋 Form bilgileri hatalı! {str(validation_error)}",
+            "user_friendly": True
+        }), 400
     # Duplicate yorum kontrolü
     if check_if_url_has_posted_comment(body.video_url):
         comment_count = get_video_comment_count(body.video_url)
@@ -204,7 +240,12 @@ def post_comment_route(body: PostCommentRequest):
         }), 500
     
     # YENİ EKLENEN SATIR: Yorum başarıyla gönderildikten sonra veritabanına kaydet
-    add_posted_comment(body.video_url, body.comment_text)
+    if body.comment_id:
+        # Eğer comment_id varsa, mevcut kaydı "posted" olarak işaretle
+        mark_comment_as_posted(body.comment_id)
+    else:
+        # Eğer comment_id yoksa, yeni kayıt ekle (direct post)
+        add_posted_comment(body.video_url, body.comment_text)
     
     return jsonify({"status": "success", "message": "Comment posted successfully!", "data": response})
 

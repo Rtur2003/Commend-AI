@@ -16,6 +16,7 @@ function HomePage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [language, setLanguage] = useState(getCommentLanguage(currentLanguage));
   const [generatedComment, setGeneratedComment] = useState('');
+  const [currentCommentId, setCurrentCommentId] = useState(null); // Generated comment ID
   const [isLoading, setIsLoading] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [statusMessage, setStatusMessage] = useState(t('statusReady'));
@@ -54,6 +55,20 @@ function HomePage() {
     try {
       const response = await generateComment(videoUrl, language);
       
+      // Response'un yapısını kontrol et - string mi object mi?
+      if (typeof response === 'string') {
+        // Eski format: sadece comment text'i döndürülmüş
+        setGeneratedComment(response);
+        setCurrentCommentId(null);
+        setStatusMessage(t('statusGenerated'));
+        return;
+      }
+      
+      // Yeni format: object döndürülmüş
+      if (!response || typeof response !== 'object') {
+        throw new Error('Invalid response format from server');
+      }
+      
       // Backend'den gelen response'u kontrol et
       if (response.status === 'warning') {
         setStatusMessage(t('errorDuplicateDetected'));
@@ -65,8 +80,13 @@ function HomePage() {
         }
       }
       
-      const commentText = response.generated_text || response;
-      setGeneratedComment(commentText);
+      const commentText = response.generated_text;
+      const commentId = response.comment_id || null;
+      
+      if (commentText) {
+        setGeneratedComment(commentText);
+        setCurrentCommentId(commentId);
+      }
       
       if (response.status !== 'warning') {
         setStatusMessage(t('statusGenerated'));
@@ -98,10 +118,11 @@ function HomePage() {
     setError(null);
 
     try {
-      await postCommentToYouTube(videoUrl, generatedComment);
+      await postCommentToYouTube(videoUrl, generatedComment, currentCommentId);
       alert(t('successPosted'));
       setStatusMessage(t('statusPosted'));
       setGeneratedComment('');
+      setCurrentCommentId(null); // Reset comment ID
       fetchHistory(); // Geçmişi yenile
     } catch (err) {
       // Hata mesajını kullanıcı dostu şekilde göster
@@ -131,6 +152,7 @@ function HomePage() {
 
   const handleUseHistoryItem = (text) => {
     setGeneratedComment(text);
+    setCurrentCommentId(null); // Clear comment ID when using history
     setStatusMessage(t('statusHistoryLoaded'));
     setError(null);
   };
