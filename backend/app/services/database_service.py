@@ -11,6 +11,13 @@ try:
 except ImportError:
     USE_SQLALCHEMY = False
 
+# User service import
+try:
+    from .user_service import get_user_id
+    USER_TRACKING = True
+except ImportError:
+    USER_TRACKING = False
+
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'database.json')
 
 # Production'da PostgreSQL kullan, development'da JSON
@@ -22,9 +29,9 @@ print(f"  USE_DATABASE: {USE_DATABASE}")
 print(f"  DATABASE_URL exists: {os.environ.get('DATABASE_URL') is not None}")
 
 def load_comments():
-    """Yorumları yükler - Production'da SQLAlchemy, Development'da JSON."""
+    """Tüm kullanıcıların yorumlarını yükler - Public history."""
     if USE_DATABASE and USE_SQLALCHEMY:
-        # SQLAlchemy kullan
+        # SQLAlchemy kullan - tüm kullanıcıların yorumlarını getir
         try:
             comments = Comment.query.order_by(Comment.created_at.desc()).all()
             return [
@@ -33,7 +40,9 @@ def load_comments():
                     "text": comment.text,
                     "video_url": comment.video_url,
                     "created_at": comment.created_at.isoformat() + "Z" if comment.created_at else None,
-                    "posted_at": comment.posted_at.isoformat() + "Z" if comment.posted_at else None
+                    "posted_at": comment.posted_at.isoformat() + "Z" if comment.posted_at else None,
+                    "user_id": comment.user_id,
+                    "is_posted": comment.posted_at is not None
                 }
                 for comment in comments
             ]
@@ -60,6 +69,9 @@ def add_generated_comment(video_url, comment_text):
     if USE_DATABASE and USE_SQLALCHEMY:
         # SQLAlchemy kullan
         try:
+            # Get current user ID
+            user_id = get_user_id() if USER_TRACKING else 1
+            
             comment_id = str(uuid.uuid4())
             new_comment = Comment(
                 id=comment_id,
@@ -67,7 +79,7 @@ def add_generated_comment(video_url, comment_text):
                 video_url=video_url,
                 created_at=datetime.utcnow(),
                 posted_at=None,
-                user_id=1
+                user_id=user_id
             )
             db.session.add(new_comment)
             db.session.commit()
