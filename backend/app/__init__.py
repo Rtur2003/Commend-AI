@@ -21,7 +21,9 @@ def create_app(config_class=Config):
     db.init_app(app)
     login_manager.init_app(app)
     # CORS ayarlarını burada merkezi olarak yap
-    cors.init_app(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    cors.init_app(app, 
+                  resources={r"/*": {"origins": "*"}}, 
+                  supports_credentials=True)
 
     # Instance folder'ın var olduğundan emin ol
     try:
