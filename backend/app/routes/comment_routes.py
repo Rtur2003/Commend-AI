@@ -255,6 +255,9 @@ def post_comment_route():
         # Eğer comment_id yoksa, yeni kayıt ekle (direct post)
         add_posted_comment(body.video_url, body.comment_text)
     
+    # Get interface language for success message
+    interface_lang = data.get('interface_language', 'tr')
+    
     return jsonify({"status": "success", "message": get_message(interface_lang, 'comment_posted_success'), "data": response})
 
 

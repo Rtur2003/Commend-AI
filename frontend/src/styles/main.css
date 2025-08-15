@@ -1786,3 +1786,61 @@ button:disabled {
     scroll-behavior: smooth;
   }
 }
+
+/* New enhanced ad positioning styles */
+.ad-banner-sidebar-left {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  z-index: 90;
+}
+
+.ad-banner-sidebar-right {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  z-index: 90;
+}
+
+.ad-banner-fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.ad-banner-fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+/* Enhanced mobile responsiveness for new positions */
+@media (max-width: 768px) {
+  .ad-banner-sidebar-left,
+  .ad-banner-sidebar-right {
+    display: none;
+  }
+  
+  .ad-banner-fixed-top,
+  .ad-banner-fixed-bottom {
+    padding: 10px;
+  }
+  
+  .ad-banner-fixed-top .ad-banner-container,
+  .ad-banner-fixed-bottom .ad-banner-container {
+    border-radius: 0;
+    margin: 0;
+  }
+}

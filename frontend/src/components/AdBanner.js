@@ -11,14 +11,32 @@ const AdBanner = ({ position = 'top' }) => {
     const fetchAds = async () => {
       try {
         const activeAds = await getActiveAds();
-        setAds(activeAds);
+        // Filter ads based on position
+        const filteredAds = activeAds.filter(ad => {
+          // For mobile positions, show only on mobile devices
+          if (ad.position === 'top' || ad.position === 'bottom') {
+            return window.innerWidth <= 768 || position === ad.position;
+          }
+          // For desktop positions, show only on desktop
+          if (ad.position === 'left' || ad.position === 'right' || 
+              ad.position === 'sidebar-left' || ad.position === 'sidebar-right') {
+            return window.innerWidth > 768 || position === ad.position;
+          }
+          // For fixed positions, show on all devices if position matches
+          if (ad.position === 'fixed-top' || ad.position === 'fixed-bottom') {
+            return position === ad.position;
+          }
+          // Default: match exact position
+          return ad.position === position;
+        });
+        setAds(filteredAds);
       } catch (error) {
         console.error('Failed to load ads:', error);
       }
     };
 
     fetchAds();
-  }, []);
+  }, [position]);
 
   // Reklamları döngüsel olarak değiştir
   useEffect(() => {

@@ -79,7 +79,11 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
     left: ads.filter(ad => ad.position === 'left'),
     right: ads.filter(ad => ad.position === 'right'),
     top: ads.filter(ad => ad.position === 'top'),
-    bottom: ads.filter(ad => ad.position === 'bottom')
+    bottom: ads.filter(ad => ad.position === 'bottom'),
+    'sidebar-left': ads.filter(ad => ad.position === 'sidebar-left'),
+    'sidebar-right': ads.filter(ad => ad.position === 'sidebar-right'),
+    'fixed-top': ads.filter(ad => ad.position === 'fixed-top'),
+    'fixed-bottom': ads.filter(ad => ad.position === 'fixed-bottom')
   };
   return (
     <motion.div
@@ -234,10 +238,20 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                     onChange={handleChange}
                     className="position-select"
                   >
-                    <option value="left">Sol Taraf (Desktop)</option>
-                    <option value="right">Sağ Taraf (Desktop)</option>
-                    <option value="top">Üst Kısım (Mobile)</option>
-                    <option value="bottom">Alt Kısım (Mobile)</option>
+                    <optgroup label="📱 Mobil Pozisyonlar">
+                      <option value="top">📱 Üst Kısım (Mobil)</option>
+                      <option value="bottom">📱 Alt Kısım (Mobil)</option>
+                    </optgroup>
+                    <optgroup label="💻 Desktop Pozisyonlar">
+                      <option value="left">💻 Sol Taraf (Desktop)</option>
+                      <option value="right">💻 Sağ Taraf (Desktop)</option>
+                      <option value="sidebar-left">💻 Sol Kenar Çubuğu</option>
+                      <option value="sidebar-right">💻 Sağ Kenar Çubuğu</option>
+                    </optgroup>
+                    <optgroup label="🔥 Sabit Pozisyonlar">
+                      <option value="fixed-top">🔥 Sabit Üst (Tüm Cihazlar)</option>
+                      <option value="fixed-bottom">🔥 Sabit Alt (Tüm Cihazlar)</option>
+                    </optgroup>
                   </select>
                 </div>
               </div>
@@ -284,6 +298,10 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                           {position === 'right' && '➡️ Sağ Taraf Reklamları'}
                           {position === 'top' && '🔼 Üst Reklamlar (Mobile)'}
                           {position === 'bottom' && '🔽 Alt Reklamlar (Mobile)'}
+                          {position === 'sidebar-left' && '📋 Sol Kenar Çubuğu'}
+                          {position === 'sidebar-right' && '📋 Sağ Kenar Çubuğu'}
+                          {position === 'fixed-top' && '🔥 Sabit Üst Reklamlar'}
+                          {position === 'fixed-bottom' && '🔥 Sabit Alt Reklamlar'}
                           <span className="position-count">({positionAds.length})</span>
                         </h5>
                         {positionAds.map((ad) => (

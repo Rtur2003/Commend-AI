@@ -7,4 +7,4 @@ class Ad(db.Model):
     link_url = db.Column(db.String(500))
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    position = db.Column(db.String(20), default='left', nullable=False)  # <-- EKSİK OLAN ALAN
+    position = db.Column(db.String(20), default='left', nullable=False)  # left, right, top, bottom, sidebar-left, sidebar-right, fixed-bottom, fixed-top
