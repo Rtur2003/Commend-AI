@@ -1,5 +1,5 @@
 import google.generativeai as genai
-from ..config import Config
+from ...core.config import Config
 
 # API anahtarını yapılandır
 GEMINI_API_KEY = Config.GEMINI_API_KEY
