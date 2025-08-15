@@ -7,7 +7,7 @@ import HistoryPanel from '../components/HistoryPanel';
 import { motion } from 'framer-motion';
 import AdBanner from '../components/AdBanner';  
 
-function App() {
+function HomePage() {
   // --- STATE MANAGEMENT ---
   const [videoUrl, setVideoUrl] = useState('');
   const [language, setLanguage] = useState('Turkish');
@@ -151,4 +151,4 @@ function App() {
   );
 }
 
-export default App;
+export default HomePage;

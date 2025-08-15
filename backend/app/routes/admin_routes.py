@@ -10,7 +10,7 @@ from ..models.ad import Ad
 admin_routes = Blueprint('admin', __name__, url_prefix='/api/admin')
 
 # Config'den admin şifresini ve secret key'i al
-ADMIN_PASSWORD = Config.ADMIN_PASSWORD or 'admin123'
+ADMIN_PASSWORD = Config.ADMIN_PASSWORD
 SECRET_KEY = Config.SECRET_KEY
 
 # --- JWT TOKEN YARDIMCI FONKSİYONLARI ---
@@ -54,12 +54,8 @@ def admin_login():
     data = request.json
     password = data.get('password')
     
-    print(f"Login attempt with password: {password}")  # DEBUG
-    print(f"Expected password: {ADMIN_PASSWORD}")  # DEBUG
-    
     if password == ADMIN_PASSWORD:
         token = generate_token()
-        print(f"Login successful, token generated")  # DEBUG
         return jsonify({
             "status": "success", 
             "message": "Admin login successful.",
@@ -81,7 +77,6 @@ def check_auth():
     
     token = auth_header.split(' ')[1]
     is_admin = verify_token(token)
-    print(f"Auth check - Token valid: {is_admin}")  # DEBUG
     return jsonify({"is_admin": is_admin})
 
 # --- REKLAM YÖNETİMİ ROTALARI ---
@@ -110,11 +105,28 @@ def create_ad():
     new_ad = Ad(
         content=data.get('content'),
         link_url=data.get('link_url'),
-        is_active=data.get('is_active', True)
+        is_active=data.get('is_active', True),
+        position=data.get('position', 'left')
     )
     db.session.add(new_ad)
     db.session.commit()
     return jsonify({"status": "success", "message": "Ad created successfully.", "id": new_ad.id}), 201
+
+@admin_routes.route('/ads/<int:ad_id>', methods=['PUT'])
+@admin_required
+def update_ad(ad_id):
+    """Bir reklamı günceller."""
+    ad = Ad.query.get_or_404(ad_id)
+    data = request.json
+    
+    ad.content = data.get('content', ad.content)
+    ad.link_url = data.get('link_url', ad.link_url)
+    ad.position = data.get('position', ad.position)
+    if 'is_active' in data:
+        ad.is_active = data['is_active']
+    
+    db.session.commit()
+    return jsonify({"status": "success", "message": "Ad updated successfully."})
 
 @admin_routes.route('/ads/<int:ad_id>', methods=['DELETE'])
 @admin_required

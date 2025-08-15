@@ -155,7 +155,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                 <span className="stats-label">Son 24 Saatteki Yorumlar:</span>
                 <span className="stats-value">
                   {history.filter(item => {
-                    const itemDate = new Date(item.created_at);
+                    const itemDate = new Date(item.posted_at);
                     const now = new Date();
                     return (now - itemDate) <= (24 * 60 * 60 * 1000);
                   }).length}

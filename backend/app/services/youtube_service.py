@@ -10,8 +10,8 @@ import isodate # Videonun süresini parse etmek için
 
     
 
-# ... get_authenticated_service() fonksiyonu aynı kalıyor ...
 def get_authenticated_service():
+    """OAuth 2.0 ile YouTube API kimlik doğrulaması yapar ve servis nesnesini döndürür."""
     CLIENT_SECRETS_FILE = 'client_secret.json'
 
     # OAuth kimlik bilgilerini depolayacak dosyanın adı
@@ -19,7 +19,6 @@ def get_authenticated_service():
 
     # Gerekli kapsamlar (API'nin hangi verilere erişebileceğini belirler)
     SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
-    """OAuth 2.0 ile YouTube API kimlik doğrulaması yapar ve servis nesnesini döndürür."""
     creds = None
     if os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
