@@ -53,7 +53,7 @@ function HomePage() {
     setError(null);
 
     try {
-      const response = await generateComment(videoUrl, language);
+      const response = await generateComment(videoUrl, language, currentLanguage);
       
       // Response'un yapısını kontrol et - string mi object mi?
       if (typeof response === 'string') {
@@ -118,7 +118,7 @@ function HomePage() {
     setError(null);
 
     try {
-      await postCommentToYouTube(videoUrl, generatedComment, currentCommentId);
+      await postCommentToYouTube(videoUrl, generatedComment, currentCommentId, currentLanguage);
       alert(t('successPosted'));
       setStatusMessage(t('statusPosted'));
       setGeneratedComment('');

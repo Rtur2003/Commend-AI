@@ -5,6 +5,7 @@ from typing import Literal, Optional
 from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
 from ..services.gemini_service import generate_comment_text, summarize_transcript
 from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, add_generated_comment, mark_comment_as_posted, get_video_comment_count
+from ..services.translation_service import get_message
 import re
 
 
@@ -15,11 +16,13 @@ class GenerateCommentRequest(BaseModel):
     video_url: str = Field(..., min_length=15, description="YouTube video URL'si")
     language: Literal['Turkish', 'English', 'Russian', 'Chinese', 'Japanese']
     comment_style: str
+    interface_language: Optional[str] = Field(default='tr', description="Interface language for error messages")
 
 class PostCommentRequest(BaseModel):
     video_url: str = Field(..., min_length=15)
     comment_text: str = Field(..., min_length=1)
     comment_id: Optional[str] = Field(default=None, description="Generated comment ID if available")
+    interface_language: Optional[str] = Field(default='tr', description="Interface language for error messages")
 
 @comment_routes.route('/api/generate_comment', methods=['POST'])
 def generate_comment_route():
@@ -28,10 +31,14 @@ def generate_comment_route():
     
     # Manuel validation with detailed error info
     data = request.get_json()
+    
+    # Get interface language for error messages
+    interface_lang = data.get('interface_language', 'tr') if data else 'tr'
+    
     if not data:
         return jsonify({
             "status": "error", 
-            "message": "📡 Veri gönderilmedi!\n\nSunucuya hiç veri ulaşmadı.\n\n💡 İnternet bağlantınızı kontrol edin ve tekrar deneyin.",
+            "message": get_message(interface_lang, 'no_data_sent'),
             "user_friendly": True
         }), 400
     
@@ -39,19 +46,19 @@ def generate_comment_route():
     if 'video_url' not in data:
         return jsonify({
             "status": "error", 
-            "message": "📝 Eksik bilgi!\n\nYouTube video URL'si gerekli.\n\n💡 Lütfen geçerli bir YouTube video linki girin.",
+            "message": get_message(interface_lang, 'missing_video_url'),
             "user_friendly": True
         }), 400
     if 'language' not in data:
         return jsonify({
             "status": "error", 
-            "message": "🌐 Dil seçimi gerekli!\n\nLütfen yorum dilini seçin.\n\n💡 Türkçe, İngilizce veya diğer mevcut dillerden birini seçin.",
+            "message": get_message(interface_lang, 'missing_language'),
             "user_friendly": True
         }), 400
     if 'comment_style' not in data:
         return jsonify({
             "status": "error", 
-            "message": "🎨 Yorum stili gerekli!\n\nLütfen bir yorum stili belirtin.\n\n💡 Forma eksik bilgi gönderildi.",
+            "message": get_message(interface_lang, 'missing_comment_style'),
             "user_friendly": True
         }), 400
         
@@ -65,7 +72,7 @@ def generate_comment_route():
     except Exception as validation_error:
         return jsonify({
             "status": "error", 
-            "message": f"📋 Form bilgileri hatalı!\n\nGönderilen veriler geçerli değil.\n\nTeknik detay: {str(validation_error)}\n\n💡 Sayfayı yenileyip tekrar deneyin.",
+            "message": get_message(interface_lang, 'form_validation_error', error=str(validation_error)),
             "technical_error": str(validation_error),
             "user_friendly": True
         }), 400
@@ -74,25 +81,23 @@ def generate_comment_route():
         # 1. Video detaylarını ve istatistiklerini çek
         details, error = get_video_details(body.video_url)
         if error:
-            user_friendly_message = "📹 Video bilgileri alınamadı!\n\n"
-            
             if "not found" in error.lower():
-                user_friendly_message += "Video bulunamadı. Bu durum şu sebeplerden olabilir:\n• Video silinmiş veya gizli\n• URL hatalı yazılmış\n• Video erişim kısıtlamasına sahip\n\n💡 URL'i kontrol edin ve geçerli, herkese açık bir video deneyin."
+                message = get_message(interface_lang, 'video_details_failed') + "\n\n" + get_message(interface_lang, 'video_not_found')
             elif "private" in error.lower():
-                user_friendly_message += "Bu video özel veya kısıtlı erişimli.\n\n💡 Herkese açık bir YouTube videosu deneyin."
+                message = get_message(interface_lang, 'video_details_failed') + "\n\n" + get_message(interface_lang, 'video_private')
             else:
-                user_friendly_message += f"Teknik detay: {error}\n\n💡 Farklı bir video deneyin veya daha sonra tekrar deneyin."
+                message = get_message(interface_lang, 'video_details_failed') + "\n\n" + get_message(interface_lang, 'video_generic_error', error=error)
                 
             return jsonify({
                 "status": "error", 
-                "message": user_friendly_message,
+                "message": message,
                 "technical_error": error,
                 "user_friendly": True
             }), 500
     except Exception as e:
         return jsonify({
             "status": "error", 
-            "message": f"🔧 Beklenmeyen sistem hatası!\n\nTeknik detay: {str(e)}\n\n💡 Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse sistem yöneticisi ile iletişime geçin.",
+            "message": get_message(interface_lang, 'system_error', error=str(e)),
             "technical_error": str(e),
             "user_friendly": True
         }), 500
@@ -126,7 +131,7 @@ def generate_comment_route():
         comment_count = get_video_comment_count(body.video_url)
         return jsonify({
             "status": "warning", 
-            "message": f"⚠️ Aynı videoya daha önce yorum yapmışsınız!\n\nBu videoya toplam {comment_count} kez yorum gönderildi. Sistem güvenliği için aynı videoya birden fazla yorum gönderilmesine izin verilmiyor.\n\n✅ Yeni yorum oluşturabilirsiniz\n❌ Ancak bu videoya gönderilemez",
+            "message": get_message(interface_lang, 'duplicate_warning', count=comment_count),
             "comment_count": comment_count,
             "can_generate": True,
             "can_post": False,
@@ -136,21 +141,18 @@ def generate_comment_route():
     # 7. Tüm verilerle Gemini'den yorum üret (transcript özeti dahil)
     comment_text, error = generate_comment_text(details, body.comment_style, body.language, existing_comments, transcript_summary)
     if error:
-        # AI hata mesajını kullanıcı dostu hale getir
-        user_friendly_message = "🤖 Yorum üretilirken hata oluştu!\n\n"
-        
         if "api key" in error.lower():
-            user_friendly_message += "🔑 AI servis bağlantısında sorun var.\n\n💡 Sistem yöneticisi ile iletişime geçin veya daha sonra tekrar deneyin."
+            message = get_message(interface_lang, 'ai_generation_failed') + "\n\n" + get_message(interface_lang, 'ai_api_key_error')
         elif "quota" in error.lower() or "limit" in error.lower():
-            user_friendly_message += "⏰ AI servis limit aşıldı.\n\n💡 Birkaç dakika bekleyip tekrar deneyin."
+            message = get_message(interface_lang, 'ai_generation_failed') + "\n\n" + get_message(interface_lang, 'ai_quota_error')
         elif "network" in error.lower() or "connection" in error.lower():
-            user_friendly_message += "🌐 İnternet bağlantısı sorunu.\n\n💡 Bağlantınızı kontrol edin ve tekrar deneyin."
+            message = get_message(interface_lang, 'ai_generation_failed') + "\n\n" + get_message(interface_lang, 'ai_network_error')
         else:
-            user_friendly_message += f"Teknik detay: {error}\n\n💡 Sayfayı yenileyip tekrar deneyin."
+            message = get_message(interface_lang, 'ai_generation_failed') + "\n\n" + get_message(interface_lang, 'ai_generic_error', error=error)
         
         return jsonify({
             "status": "error", 
-            "message": user_friendly_message,
+            "message": message,
             "technical_error": error,
             "user_friendly": True
         }), 500
@@ -253,7 +255,7 @@ def post_comment_route():
         # Eğer comment_id yoksa, yeni kayıt ekle (direct post)
         add_posted_comment(body.video_url, body.comment_text)
     
-    return jsonify({"status": "success", "message": "Comment posted successfully!", "data": response})
+    return jsonify({"status": "success", "message": get_message(interface_lang, 'comment_posted_success'), "data": response})
 
 
 @comment_routes.route('/api/history', methods=['GET'])

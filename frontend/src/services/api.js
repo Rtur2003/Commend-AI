@@ -25,19 +25,21 @@ axios.interceptors.response.use(
 );
 
 // Yorum fonksiyonları
-export const generateComment = async (videoUrl, language) => {
+export const generateComment = async (videoUrl, language, interfaceLanguage = 'tr') => {
   const response = await axios.post(`${API_URL}/generate_comment`, {
     video_url: videoUrl,
     language: language,
-    comment_style: 'default'
+    comment_style: 'default',
+    interface_language: interfaceLanguage
   });
   return response.data; // Tüm response'u döndür (comment_id dahil)
 };
 
-export const postCommentToYouTube = async (videoUrl, commentText, commentId = null) => {
+export const postCommentToYouTube = async (videoUrl, commentText, commentId = null, interfaceLanguage = 'tr') => {
   const requestData = {
     video_url: videoUrl,
-    comment_text: commentText
+    comment_text: commentText,
+    interface_language: interfaceLanguage
   };
   
   // Eğer commentId varsa ekle
