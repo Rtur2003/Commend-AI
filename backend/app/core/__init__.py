@@ -1,0 +1,1 @@
+# Core module for centralized configuration and utilities

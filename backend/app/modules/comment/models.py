@@ -1,5 +1,5 @@
-# backend/app/models/comment.py
-from .. import db
+# Comment model
+from ...core.database import db
 
 class Comment(db.Model):
     id = db.Column(db.String(36), primary_key=True)

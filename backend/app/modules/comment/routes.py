@@ -2,10 +2,10 @@ from flask import Blueprint, request, jsonify
 from pydantic import BaseModel, Field
 from flask_pydantic import validate
 from typing import Literal, Optional
-from ..services.youtube_service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
-from ..services.gemini_service import generate_comment_text, summarize_transcript
-from ..services.database_service import load_comments, check_if_url_has_posted_comment, add_posted_comment, add_generated_comment, mark_comment_as_posted, get_video_comment_count
-from ..services.translation_service import get_message
+from ...integrations.youtube.service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
+from ...integrations.gemini.service import generate_comment_text, summarize_transcript
+from ...integrations.translation.service import get_message
+from .services import CommentService, CommentGenerationService
 import re
 
 

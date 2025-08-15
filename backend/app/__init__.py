@@ -1,12 +1,7 @@
 import os
 from flask import Flask, jsonify
-from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from .config import Config
-
-# Eklentileri (extensions) burada başlatıyoruz
-db = SQLAlchemy()
-cors = CORS()
+from .core.config import Config
+from .core.database import db, cors, init_database
 
 def create_app(config_class=Config):
     """Uygulamayı oluşturan ana fabrika fonksiyonu."""
@@ -22,12 +17,8 @@ def create_app(config_class=Config):
         print(f"Configuration error: {e}")
         raise
 
-    # Eklentileri uygulamayla ilişkilendir
-    db.init_app(app)
-    # CORS ayarlarını burada merkezi olarak yap
-    cors.init_app(app, 
-                  resources={r"/*": {"origins": "*"}}, 
-                  supports_credentials=True)
+    # Initialize database and extensions
+    init_database(app)
 
     # Instance folder'ın var olduğundan emin ol
     try:
@@ -36,17 +27,23 @@ def create_app(config_class=Config):
         pass
 
     with app.app_context():
-        # Rota ve modelleri import et (döngüsel import'u önlemek için burada)
-        from .models import user, comment, ad
-        from .routes import comment_routes, admin_routes, public_routes
+        # Import models from modules (to avoid circular imports)
+        from .modules.user import models as user_models
+        from .modules.comment import models as comment_models
+        from .modules.ads import models as ads_models
         
-        # Veritabanı tablolarını oluştur
+        # Import routes from modules
+        from .modules.comment.routes import comment_routes
+        from .modules.admin.routes import admin_routes
+        from .routes.public_routes import public_routes
+        
+        # Create database tables
         db.create_all()
 
-        # Rota gruplarını (Blueprint) kaydet
-        app.register_blueprint(comment_routes.comment_routes)
-        app.register_blueprint(admin_routes.admin_routes)
-        app.register_blueprint(public_routes.public_routes)
+        # Register blueprint routes
+        app.register_blueprint(comment_routes)
+        app.register_blueprint(admin_routes)
+        app.register_blueprint(public_routes)
 
         # --- MERKEZİ HATA YÖNETİCİSİ ---
         @app.errorhandler(Exception)
