@@ -2,12 +2,10 @@ import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 from .config import Config
 
 # Eklentileri (extensions) burada başlatıyoruz
 db = SQLAlchemy()
-login_manager = LoginManager()
 cors = CORS()
 
 def create_app(config_class=Config):
@@ -26,7 +24,6 @@ def create_app(config_class=Config):
 
     # Eklentileri uygulamayla ilişkilendir
     db.init_app(app)
-    login_manager.init_app(app)
     # CORS ayarlarını burada merkezi olarak yap
     cors.init_app(app, 
                   resources={r"/*": {"origins": "*"}}, 

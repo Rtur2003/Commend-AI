@@ -1,10 +1,9 @@
 # backend/app/models/user.py
 from .. import db # __init__.py dosyasında oluşturacağımız db nesnesi
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=True)  # Admin users için
     password_hash = db.Column(db.String(256), nullable=True)  # Admin users için
