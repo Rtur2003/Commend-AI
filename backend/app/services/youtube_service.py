@@ -31,23 +31,40 @@ def get_authenticated_service():
     else:
         CLIENT_SECRETS_FILE = 'client_secret.json'
 
-    # OAuth kimlik bilgilerini depolayacak dosyanın adı
-    TOKEN_FILE = 'token.json'
-
     # Gerekli kapsamlar (API'nin hangi verilere erişebileceğini belirler)
     SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
+    
+    # Production ortamında TOKEN_JSON environment variable'dan token'ı oku
+    TOKEN_JSON = os.getenv('TOKEN_JSON')
+    if TOKEN_JSON:
+        try:
+            # Environment variable'dan token'ı al ve Credentials oluştur
+            token_data = json.loads(TOKEN_JSON)
+            creds = Credentials.from_authorized_user_info(token_data, SCOPES)
+            
+            # Token expire olmuşsa refresh et
+            if creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            
+            return build('youtube', 'v3', credentials=creds)
+        except Exception as e:
+            print(f"TOKEN_JSON parse error: {e}")
+    
+    # Fallback: Local token.json dosyasını dene
+    TOKEN_FILE = 'token.json'
     creds = None
     if os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(TOKEN_FILE, 'w') as token:
-            token.write(creds.to_json())
-    return build('youtube', 'v3', credentials=creds)
+        if creds and not creds.valid:
+            if creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                # Token geçersiz ve browser kullanılamıyor
+                raise Exception("OAuth token geçersiz. Local ortamda yeniden authorize edin.")
+        return build('youtube', 'v3', credentials=creds)
+    
+    # Ne token.json var ne de TOKEN_JSON environment variable
+    raise Exception("YouTube API kimlik doğrulaması bulunamadı. TOKEN_JSON environment variable'ı ayarlayın.")
 
 def get_video_details(video_url):
     """Verilen YouTube URL'sinden metinsel, istatistiksel ve içerik detaylarını çeker."""
