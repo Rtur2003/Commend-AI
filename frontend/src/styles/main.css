@@ -63,6 +63,33 @@
   font-style: italic;
 }
 
+/* Hata mesajları için özel stiller */
+.error-message {
+  background-color: rgba(211, 47, 47, 0.1);
+  border: 1px solid var(--error-color);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  white-space: pre-line;
+  line-height: 1.5;
+}
+
+.error-message strong {
+  color: var(--error-color);
+}
+
+/* Uyarı mesajları */
+.warning-message {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  white-space: pre-line;
+  line-height: 1.5;
+  color: #856404;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -420,6 +447,65 @@ button:disabled {
   padding: 2px 8px;
   background-color: var(--border-color);
   border-radius: 12px;
+}
+
+/* Language Selector */
+.language-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-button {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.lang-button:hover {
+  background-color: var(--border-color);
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  min-width: 140px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: none;
+}
+
+.language-selector:hover .lang-dropdown {
+  display: block;
+}
+
+.lang-dropdown button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.lang-dropdown button:hover {
+  background-color: var(--border-color);
+}
+
+.lang-dropdown button.active {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .app-header .main-nav a {

@@ -28,15 +28,31 @@ def generate_comment_route():
     # Manuel validation with detailed error info
     data = request.get_json()
     if not data:
-        return jsonify({"status": "error", "message": "No JSON data provided"}), 400
+        return jsonify({
+            "status": "error", 
+            "message": "📡 Veri gönderilmedi!\n\nSunucuya hiç veri ulaşmadı.\n\n💡 İnternet bağlantınızı kontrol edin ve tekrar deneyin.",
+            "user_friendly": True
+        }), 400
     
     # Validate required fields
     if 'video_url' not in data:
-        return jsonify({"status": "error", "message": "video_url required"}), 400
+        return jsonify({
+            "status": "error", 
+            "message": "📝 Eksik bilgi!\n\nYouTube video URL'si gerekli.\n\n💡 Lütfen geçerli bir YouTube video linki girin.",
+            "user_friendly": True
+        }), 400
     if 'language' not in data:
-        return jsonify({"status": "error", "message": "language required"}), 400
+        return jsonify({
+            "status": "error", 
+            "message": "🌐 Dil seçimi gerekli!\n\nLütfen yorum dilini seçin.\n\n💡 Türkçe, İngilizce veya diğer mevcut dillerden birini seçin.",
+            "user_friendly": True
+        }), 400
     if 'comment_style' not in data:
-        return jsonify({"status": "error", "message": "comment_style required"}), 400
+        return jsonify({
+            "status": "error", 
+            "message": "🎨 Yorum stili gerekli!\n\nLütfen bir yorum stili belirtin.\n\n💡 Forma eksik bilgi gönderildi.",
+            "user_friendly": True
+        }), 400
         
     # Create validated object
     try:
@@ -48,17 +64,37 @@ def generate_comment_route():
     except Exception as validation_error:
         return jsonify({
             "status": "error", 
-            "message": f"Validation error: {str(validation_error)}",
-            "received_data": data
+            "message": f"📋 Form bilgileri hatalı!\n\nGönderilen veriler geçerli değil.\n\nTeknik detay: {str(validation_error)}\n\n💡 Sayfayı yenileyip tekrar deneyin.",
+            "technical_error": str(validation_error),
+            "user_friendly": True
         }), 400
     
     try:
         # 1. Video detaylarını ve istatistiklerini çek
         details, error = get_video_details(body.video_url)
         if error:
-            return jsonify({"status": "error", "message": f"Video details error: {error}"}), 500
+            user_friendly_message = "📹 Video bilgileri alınamadı!\n\n"
+            
+            if "not found" in error.lower():
+                user_friendly_message += "Video bulunamadı. Bu durum şu sebeplerden olabilir:\n• Video silinmiş veya gizli\n• URL hatalı yazılmış\n• Video erişim kısıtlamasına sahip\n\n💡 URL'i kontrol edin ve geçerli, herkese açık bir video deneyin."
+            elif "private" in error.lower():
+                user_friendly_message += "Bu video özel veya kısıtlı erişimli.\n\n💡 Herkese açık bir YouTube videosu deneyin."
+            else:
+                user_friendly_message += f"Teknik detay: {error}\n\n💡 Farklı bir video deneyin veya daha sonra tekrar deneyin."
+                
+            return jsonify({
+                "status": "error", 
+                "message": user_friendly_message,
+                "technical_error": error,
+                "user_friendly": True
+            }), 500
     except Exception as e:
-        return jsonify({"status": "error", "message": f"Exception in video details: {str(e)}"}), 500
+        return jsonify({
+            "status": "error", 
+            "message": f"🔧 Beklenmeyen sistem hatası!\n\nTeknik detay: {str(e)}\n\n💡 Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse sistem yöneticisi ile iletişime geçin.",
+            "technical_error": str(e),
+            "user_friendly": True
+        }), 500
 
     # 2. Kanal istatistiklerini çek
     if details and details.get('channel_id'):
@@ -89,16 +125,34 @@ def generate_comment_route():
         comment_count = get_video_comment_count(body.video_url)
         return jsonify({
             "status": "warning", 
-            "message": f"Bu videoya daha önce {comment_count} yorum gönderdiniz. Yeni yorum oluşturabilirsiniz ama gönderilemez.",
+            "message": f"⚠️ Aynı videoya daha önce yorum yapmışsınız!\n\nBu videoya toplam {comment_count} kez yorum gönderildi. Sistem güvenliği için aynı videoya birden fazla yorum gönderilmesine izin verilmiyor.\n\n✅ Yeni yorum oluşturabilirsiniz\n❌ Ancak bu videoya gönderilemez",
             "comment_count": comment_count,
             "can_generate": True,
-            "can_post": False
+            "can_post": False,
+            "user_friendly": True
         }), 200
 
     # 7. Tüm verilerle Gemini'den yorum üret (transcript özeti dahil)
     comment_text, error = generate_comment_text(details, body.comment_style, body.language, existing_comments, transcript_summary)
     if error:
-        return jsonify({"status": "error", "message": error}), 500
+        # AI hata mesajını kullanıcı dostu hale getir
+        user_friendly_message = "🤖 Yorum üretilirken hata oluştu!\n\n"
+        
+        if "api key" in error.lower():
+            user_friendly_message += "🔑 AI servis bağlantısında sorun var.\n\n💡 Sistem yöneticisi ile iletişime geçin veya daha sonra tekrar deneyin."
+        elif "quota" in error.lower() or "limit" in error.lower():
+            user_friendly_message += "⏰ AI servis limit aşıldı.\n\n💡 Birkaç dakika bekleyip tekrar deneyin."
+        elif "network" in error.lower() or "connection" in error.lower():
+            user_friendly_message += "🌐 İnternet bağlantısı sorunu.\n\n💡 Bağlantınızı kontrol edin ve tekrar deneyin."
+        else:
+            user_friendly_message += f"Teknik detay: {error}\n\n💡 Sayfayı yenileyip tekrar deneyin."
+        
+        return jsonify({
+            "status": "error", 
+            "message": user_friendly_message,
+            "technical_error": error,
+            "user_friendly": True
+        }), 500
     
     return jsonify({
         "status": "success",
@@ -114,18 +168,40 @@ def post_comment_route(body: PostCommentRequest):
         comment_count = get_video_comment_count(body.video_url)
         return jsonify({
             "status": "error", 
-            "message": f"Bu videoya daha önce {comment_count} yorum gönderdiniz. Aynı videoya birden fazla yorum gönderilemez.",
-            "comment_count": comment_count
+            "message": f"🚫 Yorum gönderilemedi!\n\nBu videoya daha önce {comment_count} kez yorum gönderildi. Sistem güvenliği ve spam önleme politikası gereği aynı videoya birden fazla yorum gönderilmesine izin verilmiyor.\n\n💡 Başka bir videoyu deneyin veya daha önce yorum yapmadığınız bir video seçin.",
+            "comment_count": comment_count,
+            "user_friendly": True
         }), 409
 
     video_id_match = re.search(r"(?<=v=)[^&#]+", body.video_url) or re.search(r"(?<=be/)[^&#]+", body.video_url)
     if not video_id_match:
-        return jsonify({"status": "error", "message": "Geçersiz YouTube URL formatı."}), 400
+        return jsonify({
+            "status": "error", 
+            "message": "🔗 Geçersiz YouTube URL!\n\nLütfen geçerli bir YouTube video linki girin. Örnek formatlar:\n• https://www.youtube.com/watch?v=VIDEO_ID\n• https://youtu.be/VIDEO_ID\n\n💡 Linki kopyalarken tamamını seçtiğinizden emin olun.",
+            "user_friendly": True
+        }), 400
     video_id = video_id_match.group(0)
 
     response, error = post_youtube_comment(video_id, body.comment_text)
     if error:
-        return jsonify({"status": "error", "message": error}), 500
+        # Hata mesajını kullanıcı dostu hale getir
+        user_friendly_message = "🚫 Yorum gönderilirken hata oluştu!\n\n"
+        
+        if "permission" in error.lower() or "forbidden" in error.lower():
+            user_friendly_message += "📝 Yorum gönderme izniniz yok. Bu durum şu sebeplerden olabilir:\n• YouTube hesabınız yorum yapma kısıtlamasına sahip\n• Video sahibi yorumları devre dışı bırakmış\n• Hesabınız henüz doğrulanmamış\n\n💡 YouTube hesabınızı kontrol edin ve daha sonra tekrar deneyin."
+        elif "quota" in error.lower() or "limit" in error.lower():
+            user_friendly_message += "⏰ API limit aşıldı. Sistem geçici olarak yoğun.\n\n💡 Birkaç dakika bekledikten sonra tekrar deneyin."
+        elif "not found" in error.lower():
+            user_friendly_message += "📹 Video bulunamadı veya erişilemiyor.\n\n💡 Video linkini kontrol edin ve geçerli, erişilebilir bir video olduğundan emin olun."
+        else:
+            user_friendly_message += f"Teknik detay: {error}\n\n💡 Sorun devam ederse farklı bir video deneyin veya daha sonra tekrar deneyin."
+        
+        return jsonify({
+            "status": "error", 
+            "message": user_friendly_message,
+            "technical_error": error,
+            "user_friendly": True
+        }), 500
     
     # YENİ EKLENEN SATIR: Yorum başarıyla gönderildikten sonra veritabanına kaydet
     add_posted_comment(body.video_url, body.comment_text)

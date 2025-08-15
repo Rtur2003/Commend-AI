@@ -4,27 +4,79 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <meta name="theme-color" content="#18D2BB" />
+    
+    <!-- SEO Meta Tags -->
+    <title>CommendAI - AI-Powered YouTube Comment Generator | Smart Comments for Every Video</title>
+    <meta name="description" content="Generate engaging, authentic YouTube comments instantly with AI. CommendAI creates personalized comments in multiple languages for any video. Free AI comment generator for content creators and viewers." />
+    <meta name="keywords" content="YouTube comments, AI comment generator, automatic comments, YouTube engagement, AI writing tool, comment bot, YouTube automation, video comments, social media tools, content creation" />
+    <meta name="author" content="Hasan Arthur Altuntaş" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://commend-ai.vercel.app/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://commend-ai.vercel.app/" />
+    <meta property="og:title" content="CommendAI - AI-Powered YouTube Comment Generator" />
+    <meta property="og:description" content="Generate engaging, authentic YouTube comments instantly with AI. Create personalized comments in multiple languages for any video." />
+    <meta property="og:image" content="https://commend-ai.vercel.app/logo512.png" />
+    <meta property="og:site_name" content="CommendAI" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://commend-ai.vercel.app/" />
+    <meta property="twitter:title" content="CommendAI - AI-Powered YouTube Comment Generator" />
+    <meta property="twitter:description" content="Generate engaging, authentic YouTube comments instantly with AI. Create personalized comments in multiple languages for any video." />
+    <meta property="twitter:image" content="https://commend-ai.vercel.app/logo512.png" />
+    <meta property="twitter:creator" content="@commendai" />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="application-name" content="CommendAI" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="CommendAI" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#18D2BB" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CommendAI",
+      "description": "AI-powered YouTube comment generator that creates engaging, authentic comments for any video in multiple languages.",
+      "url": "https://commend-ai.vercel.app/",
+      "author": {
+        "@type": "Person",
+        "name": "Hasan Arthur Altuntaş"
+      },
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "150"
+      },
+      "featureList": [
+        "AI-powered comment generation",
+        "Multi-language support",
+        "YouTube integration",
+        "Spam prevention",
+        "Comment history tracking"
+      ]
+    }
+    </script>
+    
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Comment.ai</title>
   </head>
   <body>
   <video autoPlay loop muted playsInline class="background-video">

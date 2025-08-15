@@ -57,8 +57,28 @@ def create_app(config_class=Config):
             print(f"An unhandled error occurred: {e}")
             response = {
                 "status": "error",
-                "message": "Sunucuda beklenmedik bir hata oluştu.",
+                "message": f"🔧 Sistem hatası oluştu!\n\nSunucuda beklenmedik bir sorun yaşandı.\n\nTeknik detay: {str(e)}\n\n💡 Bu hata otomatik olarak kaydedildi. Lütfen birkaç dakika sonra tekrar deneyin.",
+                "technical_error": str(e),
+                "user_friendly": True,
                 "author": config_class.get_author_info()["author"]
+            }
+            return jsonify(response), 500
+        
+        @app.errorhandler(404)
+        def handle_404(e):
+            response = {
+                "status": "error",
+                "message": "🔍 Sayfa bulunamadı!\n\nAradığınız sayfa mevcut değil.\n\n💡 URL'yi kontrol edin veya ana sayfaya dönün.",
+                "user_friendly": True
+            }
+            return jsonify(response), 404
+        
+        @app.errorhandler(500)
+        def handle_500(e):
+            response = {
+                "status": "error",
+                "message": "⚠️ Sunucu hatası!\n\nSistemde geçici bir sorun var.\n\n💡 Birkaç dakika sonra tekrar deneyin.",
+                "user_friendly": True
             }
             return jsonify(response), 500
         
