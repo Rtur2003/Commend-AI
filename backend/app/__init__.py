@@ -35,7 +35,7 @@ def create_app(config_class=Config):
         # Import routes from modules
         from .modules.comment.routes import comment_routes
         from .modules.admin.routes import admin_routes
-        from .routes.public_routes import public_routes
+        from .modules.public.routes import public_routes
         
         # Create database tables
         db.create_all()
