@@ -21,8 +21,37 @@ class PostCommentRequest(BaseModel):
     comment_text: str = Field(..., min_length=1)
 
 @comment_routes.route('/api/generate_comment', methods=['POST'])
-@validate()
-def generate_comment_route(body: GenerateCommentRequest):
+def generate_comment_route():
+    """Generate comment with detailed error handling."""
+    from flask import request
+    
+    # Manuel validation with detailed error info
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "No JSON data provided"}), 400
+    
+    # Validate required fields
+    if 'video_url' not in data:
+        return jsonify({"status": "error", "message": "video_url required"}), 400
+    if 'language' not in data:
+        return jsonify({"status": "error", "message": "language required"}), 400
+    if 'comment_style' not in data:
+        return jsonify({"status": "error", "message": "comment_style required"}), 400
+        
+    # Create validated object
+    try:
+        body = GenerateCommentRequest(
+            video_url=data['video_url'],
+            language=data['language'], 
+            comment_style=data['comment_style']
+        )
+    except Exception as validation_error:
+        return jsonify({
+            "status": "error", 
+            "message": f"Validation error: {str(validation_error)}",
+            "received_data": data
+        }), 400
+    
     try:
         # 1. Video detaylarını ve istatistiklerini çek
         details, error = get_video_details(body.video_url)

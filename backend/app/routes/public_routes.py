@@ -39,6 +39,29 @@ def test_youtube():
             "error_type": type(e).__name__
         }), 500
 
+@public_routes.route('/api/debug-request', methods=['POST'])
+def debug_request():
+    """Debug incoming request data."""
+    from flask import request
+    import json
+    try:
+        data = request.get_json()
+        return jsonify({
+            "status": "success",
+            "headers": dict(request.headers),
+            "user_agent": request.headers.get('User-Agent'),
+            "content_type": request.content_type,
+            "data": data,
+            "method": request.method,
+            "is_mobile": "Mobile" in request.headers.get('User-Agent', '')
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "raw_data": request.get_data(as_text=True)
+        }), 500
+
 @public_routes.route('/api/public/active-ads', methods=['GET'])
 def get_active_ads():
     """Returns a list of all active ads."""
