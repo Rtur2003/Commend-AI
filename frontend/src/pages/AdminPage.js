@@ -141,7 +141,11 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
         </button>
         <button 
           className={`tab-button ${activeTab === 'ads' ? 'active' : ''}`}
-          onClick={() => setActiveTab('ads')}
+          onClick={() => {
+            console.log('🖱️ Reklam Yönetimi sekmesine tıklandı');
+            setActiveTab('ads');
+            console.log('📊 activeTab set edildi: ads');
+          }}
         >
           📢 Reklam Yönetimi
         </button>
@@ -195,6 +199,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
 
         {activeTab === 'ads' && (
           <div className="ads-section">
+            {console.log('🎯 Ads section render ediliyor, activeTab:', activeTab, 'ads array:', ads)}
             <motion.form 
               onSubmit={handleSubmit}
               className="ad-form"
@@ -363,6 +368,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                 </div>
               )}
             </div>
+            {console.log('✅ Ads section sonuna geldi')}
           </div>
         )}
       </motion.div>
@@ -387,13 +393,13 @@ const AdminPage = () => {
       // API response structure'ını kontrol et
       if (Array.isArray(adsData)) {
         setAds(adsData);
-        console.log('✅ Backend'den veri geldi:', adsData.length, 'adet reklam');
+        console.log('✅ Backend den veri geldi:', adsData.length, 'adet reklam');
         if (adsData.length === 0) {
           console.log('📝 Henüz hiç reklam yok, yeni reklam ekleyebilirsiniz.');
         }
       } else if (adsData && Array.isArray(adsData.ads)) {
         setAds(adsData.ads);
-        console.log('✅ Backend'den veri geldi (nested):', adsData.ads.length, 'adet reklam');
+        console.log('✅ Backend den veri geldi (nested):', adsData.ads.length, 'adet reklam');
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
         console.log('✅ Backend'den veri geldi (data):', adsData.data.length, 'adet reklam');
@@ -442,13 +448,13 @@ const AdminPage = () => {
       // API response structure'ını kontrol et (ads için)
       if (Array.isArray(adsData)) {
         setAds(adsData);
-        console.log('✅ Backend'den veri geldi:', adsData.length, 'adet reklam');
+        console.log('✅ Backend den veri geldi:', adsData.length, 'adet reklam');
         if (adsData.length === 0) {
           console.log('📝 Henüz hiç reklam yok, yeni reklam ekleyebilirsiniz.');
         }
       } else if (adsData && Array.isArray(adsData.ads)) {
         setAds(adsData.ads);
-        console.log('✅ Backend'den veri geldi (nested):', adsData.ads.length, 'adet reklam');
+        console.log('✅ Backend den veri geldi (nested):', adsData.ads.length, 'adet reklam');
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
         console.log('✅ Backend'den veri geldi (data):', adsData.data.length, 'adet reklam');
