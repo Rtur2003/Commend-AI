@@ -5,7 +5,9 @@
       "Bash(mv:*)",
       "Bash(mkdir:*)",
       "Bash(npm install:*)",
-      "Bash(yarn install)"
+      "Bash(yarn install)",
+      "Bash(yarn build)",
+      "Bash(set NODE_OPTIONS=--openssl-legacy-provider)"
     ],
     "deny": [],
     "ask": [],
