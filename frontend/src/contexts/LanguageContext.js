@@ -63,6 +63,7 @@ export const LanguageProvider = ({ children }) => {
         setCurrentLanguage(browserLang);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   // Context value

@@ -50,8 +50,8 @@ const ProfessionalSEO = ({
   // Analytics tracking
   useEffect(() => {
     // Track page view for analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('config', 'G-XXXXXXXXXX', {
+    if (typeof window !== 'undefined' && typeof window.gtag !== 'undefined') {
+      window.gtag('config', process.env.REACT_APP_GA_TRACKING_ID || 'G-XXXXXXXXXX', {
         page_title: finalPageData.title,
         page_location: currentUrl,
         content_group1: 'AI Tools',
@@ -61,8 +61,8 @@ const ProfessionalSEO = ({
 
     // Track user engagement
     const trackEngagement = () => {
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'page_engagement', {
+      if (typeof window !== 'undefined' && typeof window.gtag !== 'undefined') {
+        window.gtag('event', 'page_engagement', {
           engagement_time_msec: 1000,
           page_title: finalPageData.title
         });
@@ -215,31 +215,39 @@ const ProfessionalSEO = ({
       <meta name="availability" content="available" />
       
       {/* Performance Monitoring */}
-      <script>
-        {`
-          // Performance monitoring
-          window.addEventListener('load', function() {
-            if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/sw.js');
-            }
-            
-            // Track Core Web Vitals
-            if (typeof gtag !== 'undefined') {
-              const observer = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                  if (entry.entryType === 'largest-contentful-paint') {
-                    gtag('event', 'LCP', {
-                      value: Math.round(entry.startTime),
-                      event_category: 'Web Vitals'
-                    });
-                  }
+      {process.env.REACT_APP_ENABLE_PERFORMANCE_TRACKING === 'true' && (
+        <script>
+          {`
+            // Performance monitoring
+            window.addEventListener('load', function() {
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(function() {
+                  // Service worker registration failed - ignore silently
+                });
+              }
+              
+              // Track Core Web Vitals
+              if (typeof window.gtag !== 'undefined') {
+                try {
+                  const observer = new PerformanceObserver((list) => {
+                    for (const entry of list.getEntries()) {
+                      if (entry.entryType === 'largest-contentful-paint') {
+                        window.gtag('event', 'LCP', {
+                          value: Math.round(entry.startTime),
+                          event_category: 'Web Vitals'
+                        });
+                      }
+                    }
+                  });
+                  observer.observe({entryTypes: ['largest-contentful-paint']});
+                } catch (e) {
+                  // Performance observation failed - ignore silently
                 }
-              });
-              observer.observe({entryTypes: ['largest-contentful-paint']});
-            }
-          });
-        `}
-      </script>
+              }
+            });
+          `}
+        </script>
+      )}
     </Helmet>
   );
 };

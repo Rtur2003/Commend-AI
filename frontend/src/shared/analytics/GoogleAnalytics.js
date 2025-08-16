@@ -241,7 +241,7 @@ if (document.readyState === 'loading') {
   trackRealTimeData();
 }
 
-export default {
+const analyticsExports = {
   initGA,
   trackPageView,
   trackEvent,
@@ -256,3 +256,5 @@ export default {
   trackConversion,
   trackPurchase
 };
+
+export default analyticsExports;

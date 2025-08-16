@@ -8,7 +8,6 @@ import ProfessionalSEO from '../shared/components/seo/ProfessionalSEO';
 import { motion } from 'framer-motion';
 import AdBanner from '../components/AdBanner';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useEffect } from 'react';
 import analytics from '../shared/analytics/GoogleAnalytics';
 
 function HomePage() {
