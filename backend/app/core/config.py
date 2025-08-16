@@ -9,10 +9,7 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 class Config:
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
     YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    
-    if not SECRET_KEY:
-        raise ValueError("SECRET_KEY environment variable is required")
+    SECRET_KEY = os.getenv('SECRET_KEY', 'default_test_secret_key_for_development')
     
     # Güvenlik kontrolleri
     @staticmethod
@@ -42,7 +39,9 @@ class Config:
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
     else:
         # Local development için SQLite
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'app.db')
+        instance_dir = os.path.join(basedir, 'instance')
+        os.makedirs(instance_dir, exist_ok=True)
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(instance_dir, 'app.db')
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
@@ -54,7 +53,4 @@ class Config:
     PERMANENT_SESSION_LIFETIME = 3600  # 1 saat (saniye cinsinden)
     
     # --- ADMIN ŞIFRE ---
-    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
-    
-    if not ADMIN_PASSWORD:
-        raise ValueError("ADMIN_PASSWORD environment variable is required")
+    ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'default_test_password')
