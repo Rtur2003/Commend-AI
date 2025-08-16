@@ -1,0 +1,53 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /_next/
+Disallow: /api/
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+
+User-agent: Yandexbot
+Allow: /
+Disallow: /admin
+
+User-agent: Slurp
+Allow: /
+Disallow: /admin
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+
+# Allow caching of static assets
+Allow: /static/
+Allow: /images/
+Allow: /favicon.ico
+Allow: /logo*.png
+Allow: /manifest.json
+
+# Block unwanted bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://commend-ai.vercel.app/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

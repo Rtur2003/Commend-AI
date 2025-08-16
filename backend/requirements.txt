@@ -1,0 +1,33 @@
+# Web framework
+Flask==3.0.3
+python-dotenv==1.0.1
+gunicorn==21.2.0
+
+# AI/ML integrations
+google-generativeai==0.8.3
+
+# API'ler ile iletişim için
+google-api-python-client==2.134.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.0
+requests==2.32.3
+
+# Çapraz kaynak isteklerine izin vermek için (Frontend <-> Backend)
+Flask-Cors==4.0.1
+pydantic==2.8.2
+flask-pydantic==0.12.0
+
+# Veritabanı yönetimi (ORM)
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.31
+psycopg2-binary==2.9.9
+
+# Kullanıcı oturum yönetimi ve şifreleme
+Flask-Login==0.6.3
+Werkzeug==3.0.3
+PyJWT==2.8.0
+Flask-Session==0.5.0
+isodate==0.6.1
+
+# YouTube transcript API
+youtube-transcript-api==0.6.2

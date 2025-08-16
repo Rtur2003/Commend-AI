@@ -1,0 +1,178 @@
+# CommendAI - Professional Robots.txt
+# AI YouTube Comment Generator
+# https://commend-ai.vercel.app
+
+# Global rules for all bots
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /_next/
+Disallow: /api/
+Disallow: /temp/
+Disallow: /cache/
+Disallow: /*.json$
+Disallow: /*?*utm_*
+Disallow: /*?*fbclid*
+Disallow: /*?*gclid*
+
+# Allow important static resources
+Allow: /static/
+Allow: /images/
+Allow: /screenshots/
+Allow: /favicon.ico
+Allow: /logo*.png
+Allow: /og-image.png
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /*.css$
+Allow: /*.js$
+
+# Search Engine Specific Rules
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /screenshots/
+Allow: /logo*.png
+Allow: /og-image.png
+Allow: /favicon.ico
+
+User-agent: Googlebot-Video
+Allow: /videos/
+Allow: /*.mp4
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
+
+# Yandex (Popular in Russia/Turkey)
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 2
+
+# Baidu (Chinese search engine)
+User-agent: Baiduspider
+Allow: /
+Disallow: /admin
+Crawl-delay: 3
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Crawl-delay: 1
+
+# Yahoo/Slurp
+User-agent: Slurp
+Allow: /
+Disallow: /admin
+Crawl-delay: 2
+
+# Social Media Crawlers
+User-agent: facebookexternalhit
+Allow: /
+Allow: /og-image.png
+Allow: /screenshots/
+
+User-agent: Twitterbot
+Allow: /
+Allow: /og-image.png
+Allow: /screenshots/
+
+User-agent: LinkedInBot
+Allow: /
+Allow: /og-image.png
+
+User-agent: WhatsApp
+Allow: /
+Allow: /og-image.png
+
+User-agent: TelegramBot
+Allow: /
+Allow: /og-image.png
+
+# Block problematic/aggressive bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MajesticSEO
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+# Block malicious/spam bots
+User-agent: SputnikBot
+Disallow: /
+
+User-agent: MegaIndex.ru
+Disallow: /
+
+User-agent: Mail.Ru
+Disallow: /
+
+User-agent: LinkpadBot
+Disallow: /
+
+User-agent: rogerbot
+Disallow: /
+
+User-agent: spbot
+Disallow: /
+
+# Allow monitoring/uptime bots
+User-agent: UptimeRobot
+Allow: /
+
+User-agent: StatusCake
+Allow: /
+
+User-agent: Pingdom
+Allow: /
+
+# Sitemap locations
+Sitemap: https://commend-ai.vercel.app/sitemap.xml
+Sitemap: https://commend-ai.vercel.app/sitemap-images.xml
+Sitemap: https://commend-ai.vercel.app/sitemap-news.xml
+
+# Additional directives
+# Global crawl delay (polite crawling)
+Crawl-delay: 1
+
+# Host directive (preferred domain)
+Host: https://commend-ai.vercel.app
+
+# Cache directive for Yandex
+Clean-param: utm_source&utm_medium&utm_campaign&fbclid&gclid
