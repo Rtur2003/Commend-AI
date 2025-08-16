@@ -24,13 +24,20 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
     try {
       if (editingId) {
         await updateAd(editingId, formData);
+        console.log('✅ Reklam güncellendi:', editingId);
       } else {
-        await createAd(formData);
+        const result = await createAd(formData);
+        console.log('✅ Yeni reklam oluşturuldu:', result);
       }
       resetForm();
       await fetchAdsData();
+      
+      // Başarı mesajı göster
+      setError(''); // Önceki hataları temizle
+      alert(editingId ? 'Reklam başarıyla güncellendi!' : 'Yeni reklam başarıyla oluşturuldu!');
     } catch (err) {
-      setError(err.message || 'İşlem başarısız oldu');
+      console.error('❌ Reklam işlemi başarısız:', err);
+      setError(err.response?.data?.message || err.message || 'İşlem başarısız oldu');
     } finally {
       setIsLoading(false);
     }

@@ -11,6 +11,8 @@ const AdBanner = ({ position = 'top' }) => {
     const fetchAds = async () => {
       try {
         const activeAds = await getActiveAds();
+        console.log(`🔍 AdBanner (${position}) - API'dan gelen reklamlar:`, activeAds);
+        
         // Filter ads based on position
         const filteredAds = activeAds.filter(ad => {
           // For mobile positions, show only on mobile devices
@@ -29,9 +31,40 @@ const AdBanner = ({ position = 'top' }) => {
           // Default: match exact position
           return ad.position === position;
         });
-        setAds(filteredAds);
+        
+        console.log(`🎯 AdBanner (${position}) - Filtrelenmiş reklamlar:`, filteredAds);
+        
+        if (filteredAds.length > 0) {
+          setAds(filteredAds);
+        } else if (activeAds.length === 0) {
+          // API'dan hiç reklam gelmiyorsa test reklamları göster
+          console.warn(`⚠️ AdBanner (${position}) - API'dan reklam gelmedi, test reklamı gösteriliyor...`);
+          const testAds = [
+            {
+              id: `test-${position}`,
+              content: `🧪 Test Reklamı (${position}) - Backend'de henüz aktif reklam yok!<br><small>Admin panelinden reklam ekleyebilirsiniz.</small>`,
+              link_url: '/admin',
+              position: position
+            }
+          ];
+          setAds(testAds);
+        } else {
+          setAds([]);
+        }
       } catch (error) {
-        console.error('Failed to load ads:', error);
+        console.error(`❌ AdBanner (${position}) - Reklam yüklenemedi:`, error);
+        console.warn(`🧪 AdBanner (${position}) - Backend bağlanamıyor, test reklamı gösteriliyor...`);
+        
+        // Backend bağlanamıyorsa test reklamları göster
+        const testAds = [
+          {
+            id: `test-error-${position}`,
+            content: `🔌 Test Reklamı (${position}) - Backend bağlantısı yok!<br><small>Geliştirme modunda test reklamı gösteriliyor.</small>`,
+            link_url: '#',
+            position: position
+          }
+        ];
+        setAds(testAds);
       }
     };
 
