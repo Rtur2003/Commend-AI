@@ -16,6 +16,7 @@ backend/venv/
 # Build outputs, cache files, etc.
 frontend/build/
 backend/__pycache__/
+backend/app/instance/
 *.pyc
 *.pyo
 *.pyd
