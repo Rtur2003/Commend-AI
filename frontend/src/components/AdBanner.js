@@ -94,35 +94,73 @@ const AdBanner = ({ position = 'top' }) => {
         transform: 'translateY(-50%)',
         width: '280px',
         height: '400px',
-        zIndex: 90,
-        backgroundColor: 'red',
-        border: '3px solid yellow',
-        color: 'white',
-        padding: '20px'
+        zIndex: 90
       }}
     >
-        <div className="ad-banner-container">
-          <motion.div 
+        <div style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          minHeight: '350px',
+          background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+          border: '2px solid #18D2BB',
+          borderRadius: '12px',
+          padding: '20px',
+          boxShadow: '0 15px 40px rgba(24, 210, 187, 0.2)',
+          position: 'relative',
+          color: '#ffffff',
+          cursor: currentAd.link_url ? 'pointer' : 'default'
+        }}>
+          <div 
             key={currentAdIndex}
-            className={`ad-content ${currentAd.link_url ? 'clickable' : ''}`}
             onClick={() => handleAdClick(currentAd)}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              textAlign: 'center',
+              fontSize: '16px',
+              lineHeight: '1.5',
+              opacity: 1,
+              transition: 'opacity 0.3s ease'
+            }}
             dangerouslySetInnerHTML={{ __html: currentAd.content }}
           />
           
           {/* Reklam göstergesi */}
-          <div className="ad-indicators">
-            <span className="ad-label">Reklam</span>
+          <div style={{
+            position: 'absolute',
+            bottom: '15px',
+            left: '20px',
+            right: '20px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <span style={{
+              fontSize: '12px',
+              color: '#999',
+              background: 'rgba(0, 0, 0, 0.5)',
+              padding: '4px 8px',
+              borderRadius: '8px'
+            }}>Reklam</span>
             {ads.length > 1 && (
-              <div className="ad-dots">
+              <div style={{display: 'flex', gap: '5px'}}>
                 {ads.map((_, index) => (
                   <button
                     key={index}
-                    className={`ad-dot ${index === currentAdIndex ? 'active' : ''}`}
                     onClick={() => setCurrentAdIndex(index)}
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: index === currentAdIndex ? '#18D2BB' : 'rgba(255, 255, 255, 0.3)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
                   />
                 ))}
               </div>
@@ -130,7 +168,28 @@ const AdBanner = ({ position = 'top' }) => {
           </div>
 
           {/* Kapatma butonu */}
-          <button className="ad-close" onClick={handleClose}>
+          <button 
+            onClick={handleClose}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              width: '30px',
+              height: '30px',
+              border: 'none',
+              borderRadius: '50%',
+              background: 'rgba(0, 0, 0, 0.5)',
+              color: '#ffffff',
+              cursor: 'pointer',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(e) => e.target.style.background = 'rgba(244, 67, 54, 0.8)'}
+            onMouseOut={(e) => e.target.style.background = 'rgba(0, 0, 0, 0.5)'}
+          >
             ✕
           </button>
         </div>
