@@ -198,11 +198,12 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
         )}
 
         {activeTab === 'ads' && (
-          <div className="ads-section">
+          <div className="ads-section" style={{display: 'block !important', visibility: 'visible !important'}}>
             {console.log('🎯 Ads section render ediliyor, activeTab:', activeTab, 'ads array:', ads)}
             <form 
               onSubmit={handleSubmit}
               className="ad-form"
+              style={{display: 'block !important', visibility: 'visible !important'}}
             >
               <div className="form-header">
                 <h4>{editingId ? `✏️ Reklam #${editingId} Düzenleniyor` : '➕ Yeni Reklam Ekle'}</h4>
