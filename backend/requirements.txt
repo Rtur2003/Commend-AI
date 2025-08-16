@@ -1,7 +1,7 @@
 # Web framework
 Flask==3.0.3
 python-dotenv==1.0.1
-gunicorn==21.2.0
+gunicorn>=22.0.0
 
 # AI/ML integrations
 google-generativeai==0.8.3
@@ -10,10 +10,10 @@ google-generativeai==0.8.3
 google-api-python-client==2.134.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.0
-requests==2.32.3
+requests>=2.32.3
 
 # Çapraz kaynak isteklerine izin vermek için (Frontend <-> Backend)
-Flask-Cors==4.0.1
+Flask-Cors>=5.0.0
 pydantic==2.8.2
 flask-pydantic==0.12.0
 
@@ -24,7 +24,7 @@ psycopg2-binary==2.9.9
 
 # Kullanıcı oturum yönetimi ve şifreleme
 Flask-Login==0.6.3
-Werkzeug==3.0.3
+Werkzeug>=3.0.4
 PyJWT==2.8.0
 Flask-Session==0.5.0
 isodate==0.6.1
