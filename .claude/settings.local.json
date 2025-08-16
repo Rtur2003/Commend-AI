@@ -3,7 +3,9 @@
     "allow": [
       "Bash(rm:*)",
       "Bash(mv:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npm install:*)",
+      "Bash(yarn install)"
     ],
     "deny": [],
     "ask": [],
