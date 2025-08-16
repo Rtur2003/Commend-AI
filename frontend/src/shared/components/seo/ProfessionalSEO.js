@@ -163,39 +163,51 @@ const ProfessionalSEO = ({
       </script>
 
       {/* Google Analytics 4 */}
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-      <script>
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-XXXXXXXXXX', {
-            page_title: '${finalPageData.title}',
-            page_location: '${currentUrl}',
-            content_group1: 'AI Tools',
-            content_group2: 'YouTube Tools',
-            anonymize_ip: true,
-            allow_google_signals: false,
-            allow_ad_personalization_signals: false
-          });
-        `}
-      </script>
+      {process.env.REACT_APP_GA_TRACKING_ID && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.REACT_APP_GA_TRACKING_ID}`}></script>
+          <script>
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.REACT_APP_GA_TRACKING_ID}', {
+                page_title: '${finalPageData.title}',
+                page_location: '${currentUrl}',
+                content_group1: 'AI Tools',
+                content_group2: 'YouTube Tools',
+                anonymize_ip: true,
+                allow_google_signals: false,
+                allow_ad_personalization_signals: false
+              });
+            `}
+          </script>
+        </>
+      )}
 
       {/* Microsoft Clarity (Alternative to Hotjar) */}
-      <script>
-        {`
-          (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "XXXXXXXXXX");
-        `}
-      </script>
+      {process.env.REACT_APP_CLARITY_TRACKING_ID && (
+        <script>
+          {`
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "${process.env.REACT_APP_CLARITY_TRACKING_ID}");
+          `}
+        </script>
+      )}
 
       {/* Verification Meta Tags */}
-      <meta name="google-site-verification" content="XXXXXXXXXXXXXXXXXXXX" />
-      <meta name="msvalidate.01" content="XXXXXXXXXXXXXXXXXXXX" />
-      <meta name="yandex-verification" content="XXXXXXXXXXXXXXXXXXXX" />
+      {process.env.REACT_APP_GOOGLE_SITE_VERIFICATION && (
+        <meta name="google-site-verification" content={process.env.REACT_APP_GOOGLE_SITE_VERIFICATION} />
+      )}
+      {process.env.REACT_APP_BING_SITE_VERIFICATION && (
+        <meta name="msvalidate.01" content={process.env.REACT_APP_BING_SITE_VERIFICATION} />
+      )}
+      {process.env.REACT_APP_YANDEX_VERIFICATION && (
+        <meta name="yandex-verification" content={process.env.REACT_APP_YANDEX_VERIFICATION} />
+      )}
 
       {/* Rich Snippets Enhancement */}
       <meta name="rating" content="4.9" />

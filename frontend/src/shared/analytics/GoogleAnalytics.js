@@ -6,6 +6,11 @@
 
 // Configuration
 const GA_TRACKING_ID = process.env.REACT_APP_GA_TRACKING_ID || 'G-XXXXXXXXXX';
+
+// Don't load analytics if no tracking ID is provided
+if (!process.env.REACT_APP_GA_TRACKING_ID) {
+  console.warn('Google Analytics tracking ID not found. Please add REACT_APP_GA_TRACKING_ID to your environment variables.');
+}
 const GA_DEBUG_MODE = process.env.NODE_ENV === 'development';
 
 // Initialize Google Analytics
