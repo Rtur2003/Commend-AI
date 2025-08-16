@@ -233,34 +233,62 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
               
               {error && <div className="error-message">{error}</div>}
 
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>🎨 Reklam İçeriği (HTML/Text)</label>
+              <div style={{display: 'grid', gap: '20px', marginBottom: '25px'}}>
+                <div style={{marginBottom: '20px'}}>
+                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>🎨 Reklam İçeriği (HTML/Text)</label>
                   <textarea 
                     name="content"
                     value={formData.content}
                     onChange={handleChange}
                     placeholder="Reklam içeriğinizi buraya yazın..."
-                    required 
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '2px solid #333',
+                      backgroundColor: '#2a2a2a',
+                      color: '#ffffff',
+                      fontSize: '1rem',
+                      minHeight: '100px',
+                      resize: 'vertical'
+                    }}
                   />
                 </div>
-                <div className="form-group">
-                  <label>🔗 Reklam Linki (URL)</label>
+                <div style={{marginBottom: '20px'}}>
+                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>🔗 Reklam Linki (URL)</label>
                   <input 
                     type="url"
                     name="link_url"
                     value={formData.link_url}
                     onChange={handleChange}
                     placeholder="https://example.com"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '2px solid #333',
+                      backgroundColor: '#2a2a2a',
+                      color: '#ffffff',
+                      fontSize: '1rem'
+                    }}
                   />
                 </div>
-                <div className="form-group">
-                  <label>📍 Pozisyon</label>
+                <div style={{marginBottom: '20px'}}>
+                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>📍 Pozisyon</label>
                   <select 
                     name="position"
                     value={formData.position}
                     onChange={handleChange}
-                    className="position-select"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '2px solid #333',
+                      backgroundColor: '#2a2a2a',
+                      color: '#ffffff',
+                      fontSize: '1rem'
+                    }}
                   >
                     <optgroup label="📱 Mobil Pozisyonlar">
                       <option value="top">📱 Üst Kısım (Mobil)</option>
@@ -281,8 +309,19 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
               </div>
               <button 
                 type="submit" 
-                className="create-ad-button"
                 disabled={isLoading}
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(135deg, #18D2BB, #20E4C7)',
+                  color: '#121212',
+                  border: 'none',
+                  padding: '15px',
+                  borderRadius: '10px',
+                  fontWeight: 'bold',
+                  cursor: isLoading ? 'not-allowed' : 'pointer',
+                  fontSize: '1.1rem',
+                  opacity: isLoading ? 0.6 : 1
+                }}
               >
                 {isLoading ? (
                   <>
