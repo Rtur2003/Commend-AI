@@ -4,10 +4,12 @@ import { generateComment, postCommentToYouTube, getHistory } from '../services/a
 import CommentForm from '../components/CommentForm';
 import ResultDisplay from '../components/ResultDisplay';
 import HistoryPanel from '../components/HistoryPanel';
-import EnhancedSEOHead from '../shared/components/seo/EnhancedSEOHead';
+import ProfessionalSEO from '../shared/components/seo/ProfessionalSEO';
 import { motion } from 'framer-motion';
 import AdBanner from '../components/AdBanner';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useEffect } from 'react';
+import analytics from '../shared/analytics/GoogleAnalytics';
 
 function HomePage() {
   const { currentLanguage, t, getCommentLanguage } = useLanguage();
@@ -156,10 +158,22 @@ function HomePage() {
     setError(null);
   };
 
+  // Analytics tracking
+  useEffect(() => {
+    // Track page view
+    analytics.trackPageView(window.location.href, 'AI YouTube Comment Generator - Home');
+    
+    // Initialize real-time tracking
+    analytics.trackFeatureUsage('page_visit', 'home');
+  }, []);
+
   // --- RENDER ---
   return (
     <>
-      <EnhancedSEOHead />
+      <ProfessionalSEO 
+        page="home"
+        canonicalUrl="https://commend-ai.vercel.app/"
+      />
       <motion.div
         className="container"
         initial={{ opacity: 0, y: 20 }} // Başlangıç durumu: görünmez ve 20px aşağıda

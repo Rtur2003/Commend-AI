@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import EnhancedSEOHead from '../../shared/components/seo/EnhancedSEOHead';
+import ProfessionalSEO from '../../shared/components/seo/ProfessionalSEO';
+import analytics from '../../shared/analytics/GoogleAnalytics';
 // import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/main.css';
 
 const FeaturesPage = () => {
   // const { t } = useLanguage(); // TODO: Add translations if needed
+
+  // Analytics tracking
+  useEffect(() => {
+    analytics.trackPageView(window.location.href, 'Features - AI YouTube Comment Generator');
+    analytics.trackFeatureUsage('page_visit', 'features');
+  }, []);
 
   const features = [
     {
@@ -89,12 +96,15 @@ const FeaturesPage = () => {
 
   return (
     <div className="page-container">
-      <EnhancedSEOHead
-        title="Features - AI YouTube Comment Generator"
-        description="Discover all features of CommendAI: AI-powered comment generation, multi-language support, real-time processing, and YouTube integration. Free online tool for content creators."
-        keywords={['AI comment features', 'YouTube tools', 'comment generator features', 'AI writing tools', 'content creation']}
-        url="/features"
-        section="Features"
+      <ProfessionalSEO 
+        page="features"
+        canonicalUrl="https://commend-ai.vercel.app/features"
+        additionalStructuredData={{
+          breadcrumbs: [
+            { name: 'Home', url: 'https://commend-ai.vercel.app/' },
+            { name: 'Features', url: 'https://commend-ai.vercel.app/features' }
+          ]
+        }}
       />
       
       <motion.div

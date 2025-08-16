@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import HomePage from './pages/HomePage';
@@ -8,9 +8,15 @@ import FAQPage from './pages/FAQ/FAQPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { LanguageProvider } from './contexts/LanguageContext';
+import analytics from './shared/analytics/GoogleAnalytics';
 import './styles/main.css';
 
 function App() {
+  // Initialize Google Analytics
+  useEffect(() => {
+    analytics.initGA();
+  }, []);
+
   return (
     <HelmetProvider>
       <LanguageProvider>
