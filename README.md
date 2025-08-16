@@ -461,9 +461,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Developer
 
 **Hasan Arthur Altuntaş**
-- Email: [contact@hasanarthur.com](mailto:contact@hasanarthur.com)
-- Portfolio: [hasanarthur.com](https://hasanarthur.com)
-- LinkedIn: [linkedin.com/in/hasanarthur](https://linkedin.com/in/hasanarthur)
+- Email: [contact@hasanarthur.com](mailto:contact@hasannarthurrr@gmail.com)
+- LinkedIn: [linkedin.com/in/hasanarthur]([https://linkedin.com/in/hasanarthur](https://www.linkedin.com/in/hasan-arthur-altuntas))
 
 ## 🙏 Acknowledgments
 
