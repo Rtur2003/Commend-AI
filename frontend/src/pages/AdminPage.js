@@ -198,12 +198,25 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
         )}
 
         {activeTab === 'ads' && (
-          <div className="ads-section" style={{display: 'block !important', visibility: 'visible !important'}}>
+          <div style={{
+            display: 'block', 
+            padding: '30px',
+            backgroundColor: '#1a1a1a',
+            borderRadius: '15px',
+            border: '1px solid #333',
+            margin: '20px 0'
+          }}>
             {console.log('🎯 Ads section render ediliyor, activeTab:', activeTab, 'ads array:', ads)}
             <form 
               onSubmit={handleSubmit}
-              className="ad-form"
-              style={{display: 'block !important', visibility: 'visible !important'}}
+              style={{
+                display: 'block',
+                background: 'linear-gradient(135deg, #121212, #1a1a1a)',
+                padding: '30px',
+                borderRadius: '15px',
+                border: '1px solid #333',
+                marginBottom: '30px'
+              }}
             >
               <div className="form-header">
                 <h4>{editingId ? `✏️ Reklam #${editingId} Düzenleniyor` : '➕ Yeni Reklam Ekle'}</h4>
