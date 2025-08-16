@@ -36,7 +36,7 @@ function HomePage() {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [fetchHistory]);
 
   // Interface language değiştiğinde comment dilini güncelle
   useEffect(() => {
