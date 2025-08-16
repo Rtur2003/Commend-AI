@@ -1791,18 +1791,20 @@ button:disabled {
 .ad-banner-sidebar-left {
   position: fixed;
   left: 20px;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
-  width: 200px;
+  width: 280px;
+  height: 400px;
   z-index: 90;
 }
 
 .ad-banner-sidebar-right {
   position: fixed;
   right: 20px;
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
-  width: 200px;
+  width: 280px;
+  height: 400px;
   z-index: 90;
 }
 
@@ -1842,6 +1844,44 @@ button:disabled {
   .ad-banner-fixed-bottom .ad-banner-container {
     border-radius: 0;
     margin: 0;
+  }
+}
+
+/* Sidebar ad container specific styles */
+.ad-banner-sidebar-left .ad-banner-container,
+.ad-banner-sidebar-right .ad-banner-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 350px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 15px 40px rgba(24, 210, 187, 0.2);
+}
+
+.ad-banner-sidebar-left .ad-content,
+.ad-banner-sidebar-right .ad-content {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Enhanced sidebar ad animations */
+.ad-banner-sidebar-left,
+.ad-banner-sidebar-right {
+  animation: sidebarPulse 3s ease-in-out infinite;
+}
+
+@keyframes sidebarPulse {
+  0%, 100% { 
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 10px 30px rgba(24, 210, 187, 0.15);
+  }
+  50% { 
+    transform: translateY(-50%) scale(1.02);
+    box-shadow: 0 15px 40px rgba(24, 210, 187, 0.25);
   }
 }
 
