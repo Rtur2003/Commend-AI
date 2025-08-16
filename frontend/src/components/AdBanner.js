@@ -76,9 +76,13 @@ const AdBanner = ({ position = 'top' }) => {
     setIsVisible(false);
   };
 
-  if (!ads.length || !isVisible) return null;
+  if (!ads.length || !isVisible) {
+    console.log(`❌ AdBanner (${position}) - Render edilmiyor:`, {ads: ads.length, isVisible});
+    return null;
+  }
 
   const currentAd = ads[currentAdIndex];
+  console.log(`✅ AdBanner (${position}) - Render ediliyor:`, currentAd);
 
   return (
     <AnimatePresence>
