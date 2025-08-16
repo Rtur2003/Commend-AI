@@ -7,7 +7,9 @@
       "Bash(npm install:*)",
       "Bash(yarn install)",
       "Bash(yarn build)",
-      "Bash(set NODE_OPTIONS=--openssl-legacy-provider)"
+      "Bash(set NODE_OPTIONS=--openssl-legacy-provider)",
+      "Bash(git add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": [],
