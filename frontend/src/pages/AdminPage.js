@@ -390,7 +390,7 @@ const AdminPage = () => {
       const adsData = await getAds();
       console.log('🔍 API Response (adsData):', adsData); // Debug log ekledik
       
-      // API response structure'ını kontrol et
+      // API response structure ini kontrol et
       if (Array.isArray(adsData)) {
         setAds(adsData);
         console.log('✅ Backend den veri geldi:', adsData.length, 'adet reklam');
@@ -402,7 +402,7 @@ const AdminPage = () => {
         console.log('✅ Backend den veri geldi (nested):', adsData.ads.length, 'adet reklam');
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
-        console.log('✅ Backend'den veri geldi (data):', adsData.data.length, 'adet reklam');
+        console.log('✅ Backend den veri geldi (data):', adsData.data.length, 'adet reklam');
       } else {
         console.warn('⚠️ Unexpected API response structure:', adsData);
         setAds([]); // Boş array set et, test verisi KULLANMA
@@ -445,7 +445,7 @@ const AdminPage = () => {
       
       setHistory(historyData || []);
       
-      // API response structure'ını kontrol et (ads için)
+      // API response structure ini kontrol et (ads için)
       if (Array.isArray(adsData)) {
         setAds(adsData);
         console.log('✅ Backend den veri geldi:', adsData.length, 'adet reklam');
@@ -457,7 +457,7 @@ const AdminPage = () => {
         console.log('✅ Backend den veri geldi (nested):', adsData.ads.length, 'adet reklam');
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
-        console.log('✅ Backend'den veri geldi (data):', adsData.data.length, 'adet reklam');
+        console.log('✅ Backend den veri geldi (data):', adsData.data.length, 'adet reklam');
       } else {
         console.warn('⚠️ Unexpected API response structure:', adsData);
         setAds([]); // Boş array set et, test verisi KULLANMA
@@ -535,7 +535,7 @@ const AdminPage = () => {
       console.error("❌ Admin login failed:", err);
       console.warn("🧪 Backend login bağlanamıyor, test modu aktifleştiriliyor...");
       
-      // Backend'e bağlanamıyorsa sadece development'ta test şifresi kabul et
+      // Backend e bağlanamıyorsa sadece development ta test şifresi kabul et
       if (process.env.NODE_ENV === 'development' && (password === 'test' || password === 'admin')) {
         console.warn('🧪 Development mode: Test şifresi kabul edildi');
         setIsLoggedIn(true);
