@@ -164,9 +164,15 @@ def toggle_ad(ad_id):
 def admin_login():
     data = request.get_json()
     password = data.get('password')
-    if password in ['test', 'admin', 'admin123']:
-        return jsonify({"status": "success", "message": "Login successful", "token": "debug-token"})
-    return jsonify({"status": "error", "message": "Invalid password"}), 401
+    
+    # Only accept test passwords in debug mode
+    debug_passwords = ['test', 'admin']
+    if password in debug_passwords:
+        print(f"DEBUG LOGIN: Password '{password}' accepted")
+        return jsonify({"status": "success", "message": "Debug login successful", "token": "debug-token"})
+    
+    print(f"DEBUG LOGIN: Password '{password}' rejected")
+    return jsonify({"status": "error", "message": "Invalid debug password. Use 'test' or 'admin'"}), 401
 
 @app.route('/api/admin/check_auth', methods=['GET'])
 def check_auth():

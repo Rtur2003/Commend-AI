@@ -1,8 +1,16 @@
 import axios from 'axios';
 
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://commend-ai-backend.onrender.com/api' 
-  : 'http://127.0.0.1:5000/api';
+// Force local debug backend for development
+const API_URL = process.env.REACT_APP_API_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://commend-ai-backend.onrender.com/api' 
+    : 'http://127.0.0.1:5000/api');
+
+console.log('🔧 API Configuration:', {
+  NODE_ENV: process.env.NODE_ENV,
+  REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+  API_URL: API_URL
+});
 
 // Token işlemleri
 const setToken = (token) => localStorage.setItem('admin_token', token);
