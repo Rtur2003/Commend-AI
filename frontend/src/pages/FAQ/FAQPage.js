@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/main.css';
 
 const FAQPage = () => {
-  const { t } = useLanguage();
+  // const { t } = useLanguage(); // TODO: Add translations if needed
   const [openIndex, setOpenIndex] = useState(0);
 
   const faqData = [

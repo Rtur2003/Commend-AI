@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/main.css';
 
 const FeaturesPage = () => {
-  const { t } = useLanguage();
+  // const { t } = useLanguage(); // TODO: Add translations if needed
 
   const features = [
     {

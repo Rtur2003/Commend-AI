@@ -17,7 +17,8 @@ const EnhancedSEOHead = ({
   noindex = false,
   nofollow = false
 }) => {
-  const { currentLanguage, t } = useLanguage();
+  const { currentLanguage } = useLanguage();
+  // const { t } = useLanguage(); // TODO: Add translations if needed
   
   const defaultTitle = 'CommendAI - AI YouTube Comment Generator | Free Online Tool';
   const defaultDescription = 'Generate engaging YouTube comments with AI. Free, fast, and supports multiple languages. Boost your YouTube engagement with smart comment suggestions.';
