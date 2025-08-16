@@ -40,7 +40,7 @@
       "last 1 safari version"
     ]
   },
-  "resolutions": {
+  "overrides": {
     "ajv": "6.12.6",
     "ajv-keywords": "3.5.2"
   }
