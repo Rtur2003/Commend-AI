@@ -4,6 +4,9 @@
 backend/.env
 backend/token.json
 backend/client_secret.json
+frontend/.env.local
+frontend/.env.production.local
+frontend/.env.development.local
 
 # ### BAĞIMLILIK KLASÖRLERİ - DEPENDENCY FOLDERS ###
 # Bu klasörler `npm install` ve `pip install` komutlarıyla yeniden oluşturulabilir.
