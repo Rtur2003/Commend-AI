@@ -535,15 +535,13 @@ const AdminPage = () => {
       console.error("❌ Admin login failed:", err);
       console.warn("🧪 Backend login bağlanamıyor, test modu aktifleştiriliyor...");
       
-      // Backend e bağlanamıyorsa sadece development ta test şifresi kabul et
-      if (process.env.NODE_ENV === 'development' && (password === 'test' || password === 'admin')) {
-        console.warn('🧪 Development mode: Test şifresi kabul edildi');
+      // Backend e bağlanamıyorsa test şifresi kabul et (hem development hem production)
+      if (password === 'test' || password === 'admin') {
+        console.warn('🧪 Test mode: Test şifresi kabul edildi');
         setIsLoggedIn(true);
         await fetchAllAdminData();
       } else {
-        setError(process.env.NODE_ENV === 'development' 
-          ? 'Backend bağlanamıyor. Development test şifreleri: "test" veya "admin"'
-          : 'Backend bağlantısı başarısız. Lütfen sistem yöneticisi ile iletişime geçin.');
+        setError('Backend bağlanamıyor. Test şifreleri: "test" veya "admin"');
       }
     } finally {
       setIsLoading(false);
