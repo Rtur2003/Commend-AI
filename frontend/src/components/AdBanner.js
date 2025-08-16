@@ -85,14 +85,22 @@ const AdBanner = ({ position = 'top' }) => {
   console.log(`✅ AdBanner (${position}) - Render ediliyor:`, currentAd);
 
   return (
-    <AnimatePresence>
-      <motion.div 
-        className={`ad-banner ad-banner-${position}`}
-        initial={{ opacity: 0, y: position === 'top' ? -50 : 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: position === 'top' ? -50 : 50 }}
-        transition={{ duration: 0.5 }}
-      >
+    <div 
+      style={{
+        position: 'fixed',
+        left: position === 'sidebar-left' ? '20px' : 'auto',
+        right: position === 'sidebar-right' ? '20px' : 'auto', 
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: '280px',
+        height: '400px',
+        zIndex: 90,
+        backgroundColor: 'red',
+        border: '3px solid yellow',
+        color: 'white',
+        padding: '20px'
+      }}
+    >
         <div className="ad-banner-container">
           <motion.div 
             key={currentAdIndex}
@@ -126,8 +134,7 @@ const AdBanner = ({ position = 'top' }) => {
             ✕
           </button>
         </div>
-      </motion.div>
-    </AnimatePresence>
+      </div>
   );
 };
 
