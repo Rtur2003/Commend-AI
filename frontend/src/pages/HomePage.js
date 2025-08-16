@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../styles/main.css';
 import { generateComment, postCommentToYouTube, getHistory } from '../services/api';
 import CommentForm from '../components/CommentForm';
