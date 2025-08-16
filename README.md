@@ -1,28 +1,69 @@
 
-# CommendAI v2.0
-**Developer: Hasan Arthur Altuntaş**
+# 🤖 Commend AI - Intelligent YouTube Comment Generator
 
-> AI-powered web application that generates stylish, contextual comments for YouTube videos and posts them on your behalf.
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/hasanaltuntas/commend-ai)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://python.org)
+[![React](https://img.shields.io/badge/react-19.1.1-61dafb.svg)](https://reactjs.org)
+[![Deploy](https://img.shields.io/badge/deploy-live-success.svg)](https://commend-ai.vercel.app)
+
+> **Revolutionize your YouTube engagement with AI-powered comment generation that understands context, sentiment, and multilingual communication.**
+
+![Commend AI Banner](https://via.placeholder.com/1200x400/4285f4/ffffff?text=Commend+AI+-+Smart+YouTube+Comments)
+
+## 🌟 Overview
+
+Commend AI is a sophisticated web application that leverages Google's Gemini AI to generate contextually relevant, engaging YouTube comments in multiple languages. Built with modern web technologies, it provides content creators, marketers, and social media managers with an intelligent tool to enhance their YouTube engagement strategy.
 
 
 
-## ✨ Key Features
+### 🎯 Key Features
 
-  - **AI-Powered Comment Generation:** Uses Google Gemini API to create contextual, creative and witty comments based on video content.
-  - **Multi-Language Support:** Generates comments in specified languages (Turkish, English, Russian, etc.).
-  - **Automated Comment Posting:** Posts generated comments to YouTube through authorized bot account.
-  - **Comment History:** Stores and displays all previously posted comments in the interface.
-  - **Duplicate Prevention:** Intelligently prevents posting multiple comments to the same video.
-  - **Data Validation:** Validates backend data to make the system more secure and robust.
-  - **Admin Panel:** Includes a hidden admin panel to track application statistics.
+- **🧠 AI-Powered Generation**: Utilizes Google Gemini AI for intelligent, context-aware comment creation
+- **🌍 Multilingual Support**: Generate comments in Turkish, English, Russian, Chinese, and Japanese
+- **📊 Content Analysis**: Analyzes video transcripts, metadata, and channel information for relevant comments
+- **🎨 Multiple Comment Styles**: Various tones from professional to casual, question-based to appreciative
+- **⚡ Real-time Posting**: Direct integration with YouTube API for automated comment posting
+- **📈 Analytics Dashboard**: Track comment performance and engagement metrics
+- **🛡️ Admin Panel**: Comprehensive management system with user controls and content moderation
+- **📱 Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **🔒 Secure Authentication**: OAuth 2.0 integration with robust security measures
 
-## 🛠️ Technologies Used
+## 🚀 Live Demo
 
-  - **Frontend:** React, React Router, Axios
-  - **Backend:** Python, Flask, Pydantic
-  - **APIs:** Google Gemini API, YouTube Data API v3
-  - **Database:** SQLite (development), PostgreSQL (production)
-  - **Authentication:** Google OAuth 2.0, Flask Sessions
+**🌐 [Try Commend AI Live](https://commend-ai.vercel.app)**
+
+- **Frontend**: [https://commend-ai.vercel.app](https://commend-ai.vercel.app)
+- **Backend API**: [https://commend-ai-backend.onrender.com](https://commend-ai-backend.onrender.com)
+- **Admin Panel**: [https://commend-ai.vercel.app/admin](https://commend-ai.vercel.app/admin)
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 19.1.1** - Modern UI library with latest features
+- **Framer Motion** - Smooth animations and transitions
+- **Lucide React** - Beautiful, customizable icons
+- **React Router** - Client-side routing
+- **Axios** - HTTP client for API communication
+- **React i18next** - Internationalization framework
+
+### Backend
+- **Flask** - Lightweight Python web framework
+- **SQLAlchemy** - Object-relational mapping
+- **Flask-CORS** - Cross-origin resource sharing
+- **Pydantic** - Data validation and serialization
+- **JWT** - JSON Web Token authentication
+
+### AI & APIs
+- **Google Gemini AI** - Advanced language model for content generation
+- **YouTube Data API v3** - Video analysis and comment posting
+- **YouTube Transcript API** - Video content extraction
+
+### Database & Deployment
+- **PostgreSQL** - Production database (Render)
+- **SQLite** - Development database
+- **Vercel** - Frontend hosting and deployment
+- **Render** - Backend hosting and API deployment
 
 ## Prerequisites
 
