@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import EnhancedSEOHead from '../../shared/components/seo/EnhancedSEOHead';
-// import { useLanguage } from '../../contexts/LanguageContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/main.css';
 
 const FAQPage = () => {
-  // const { t } = useLanguage(); // TODO: Add translations if needed
+  const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState(0);
 
   const faqData = [

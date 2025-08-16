@@ -2,11 +2,14 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import re
 from ...core.config import Config
+from ...core.logger import get_logger
 import os
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 import isodate # Videonun süresini parse etmek için
+
+logger = get_logger(__name__)
 
     
 

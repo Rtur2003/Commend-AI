@@ -4,12 +4,16 @@ Comment generation and management services
 import uuid
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
+from sqlalchemy.exc import SQLAlchemyError
 
 from ...core.database import db
+from ...core.logger import get_logger
 from .models import Comment
 from ...integrations.youtube.service import get_video_details, post_youtube_comment, get_video_comments, get_channel_details, get_video_transcript
 from ...integrations.gemini.service import generate_comment_text, summarize_transcript
 from ...modules.user.services import get_user_id
+
+logger = get_logger(__name__)
 
 
 class CommentService:
@@ -32,8 +36,11 @@ class CommentService:
                 }
                 for comment in comments
             ]
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in get_all_comments: {e}")
+            return []
         except Exception as e:
-            print(f"Database error in get_all_comments: {e}")
+            logger.error(f"Unexpected error in get_all_comments: {e}")
             return []
     
     @staticmethod
@@ -59,8 +66,12 @@ class CommentService:
             db.session.add(new_comment)
             db.session.commit()
             return comment_id
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in add_generated_comment: {e}")
+            db.session.rollback()
+            return None
         except Exception as e:
-            print(f"Database error in add_generated_comment: {e}")
+            logger.error(f"Unexpected error in add_generated_comment: {e}")
             db.session.rollback()
             return None
     
@@ -87,8 +98,12 @@ class CommentService:
             db.session.add(new_comment)
             db.session.commit()
             return True
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in add_posted_comment: {e}")
+            db.session.rollback()
+            return False
         except Exception as e:
-            print(f"Database error in add_posted_comment: {e}")
+            logger.error(f"Unexpected error in add_posted_comment: {e}")
             db.session.rollback()
             return False
     
@@ -102,8 +117,12 @@ class CommentService:
                 db.session.commit()
                 return True
             return False
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in mark_comment_as_posted: {e}")
+            db.session.rollback()
+            return False
         except Exception as e:
-            print(f"Database error in mark_comment_as_posted: {e}")
+            logger.error(f"Unexpected error in mark_comment_as_posted: {e}")
             db.session.rollback()
             return False
     
@@ -121,8 +140,11 @@ class CommentService:
                 if stored_normalized == normalized_url:
                     return True
             return False
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in check_duplicate_comment: {e}")
+            return False
         except Exception as e:
-            print(f"Database error in check_duplicate_comment: {e}")
+            logger.error(f"Unexpected error in check_duplicate_comment: {e}")
             return False
     
     @staticmethod
@@ -141,8 +163,11 @@ class CommentService:
                     count += 1
             
             return count
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in get_video_comment_count: {e}")
+            return 0
         except Exception as e:
-            print(f"Database error in get_video_comment_count: {e}")
+            logger.error(f"Unexpected error in get_video_comment_count: {e}")
             return 0
     
     @staticmethod

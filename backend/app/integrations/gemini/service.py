@@ -1,17 +1,21 @@
 import google.generativeai as genai
 from ...core.config import Config
+from ...core.logger import get_logger
+
+logger = get_logger(__name__)
 
 # API anahtarını yapılandır
 GEMINI_API_KEY = Config.GEMINI_API_KEY
 if not GEMINI_API_KEY:
-    print("ERROR: GEMINI_API_KEY not found in .env file.")
+    logger.error("GEMINI_API_KEY not found in environment variables")
     model = None
 else:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
         model = genai.GenerativeModel('gemini-1.5-flash')
+        logger.info("Gemini AI model configured successfully")
     except Exception as e:
-        print(f"Error configuring Gemini API: {e}")
+        logger.error(f"Error configuring Gemini API: {e}")
         model = None
 
 def summarize_transcript(transcript_text, language):
@@ -38,7 +42,7 @@ Bu video transcript'ini {language} dilinde 2-3 cümlelik kısa bir özet haline 
         response = model.generate_content(prompt)
         return response.text.strip(), None
     except Exception as e:
-        print(f"Transcript özetleme hatası: {e}")
+        logger.error(f"Transcript özetleme hatası: {e}")
         return "Transcript özetlenemedi.", True
 
 def generate_comment_text(details, comment_style, language, existing_comments=None, transcript_summary=None):
@@ -104,5 +108,5 @@ Kötü: "Harika video! Çok beğendim!"
         response = model.generate_content(prompt_template)
         return response.text, None
     except Exception as e:
-        print(f"An error occurred during Gemini API call: {e}")
+        logger.error(f"An error occurred during Gemini API call: {e}")
         return f"Error generating comment: {e}", True
