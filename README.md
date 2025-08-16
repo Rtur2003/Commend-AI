@@ -1,20 +1,28 @@
 
-# CommendAI v2.0
+# CommendAI v1.1.0
 **Developer: Hasan Arthur Altuntaş**
 
-> AI-powered web application that generates stylish, contextual comments for YouTube videos and posts them on your behalf.
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/hasanaltuntas/commend-ai)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Deploy](https://img.shields.io/badge/deploy-live-success.svg)](https://commend-ai.vercel.app)
+
+> AI-powered web application that generates contextual, engaging comments for YouTube videos with multilingual support and automated posting capabilities.
 
 
 
 ## ✨ Key Features
 
-  - **AI-Powered Comment Generation:** Uses Google Gemini API to create contextual, creative and witty comments based on video content.
-  - **Multi-Language Support:** Generates comments in specified languages (Turkish, English, Russian, etc.).
-  - **Automated Comment Posting:** Posts generated comments to YouTube through authorized bot account.
-  - **Comment History:** Stores and displays all previously posted comments in the interface.
-  - **Duplicate Prevention:** Intelligently prevents posting multiple comments to the same video.
-  - **Data Validation:** Validates backend data to make the system more secure and robust.
-  - **Admin Panel:** Includes a hidden admin panel to track application statistics.
+- **🧠 AI-Powered Generation:** Uses Google Gemini API to create contextual, creative comments based on video content
+- **🌍 Multi-Language Support:** Generates comments in Turkish, English, Russian, Chinese, and Japanese
+- **⚡ Automated Posting:** Posts generated comments to YouTube through authorized bot account
+- **📈 Comment History:** Stores and displays all previously posted comments in the interface
+- **🛡️ Duplicate Prevention:** Intelligently prevents posting multiple comments to the same video
+- **🔒 Data Validation:** Secure backend with comprehensive data validation
+- **👨‍💼 Admin Panel:** Hidden admin panel to track application statistics and manage content
+
+## 🚀 Live Demo
+
+**🌐 [Try CommendAI Live](https://commend-ai.vercel.app)**
 
 ## 🛠️ Technologies Used
 
