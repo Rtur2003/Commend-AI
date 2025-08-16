@@ -1,12 +1,30 @@
 # ### HASSAS BİLGİLER - SENSITIVE INFO ###
 # Bu dosyalar ASLA Git'e yüklenmemelidir. API anahtarları ve kullanıcı kimlik bilgilerini içerir.
 # These files MUST NEVER be uploaded to Git. They contain API keys and user credentials.
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.production.local
+.env.development
+.env.development.local
+**/.env
+**/env
 backend/.env
 backend/token.json
 backend/client_secret.json
 frontend/.env.local
 frontend/.env.production.local
 frontend/.env.development.local
+
+# API Keys and Secrets
+**/config/keys.json
+**/config/secrets.json
+**/*secret*
+**/*key*
+**/*password*
+**/credentials.json
 
 # ### BAĞIMLILIK KLASÖRLERİ - DEPENDENCY FOLDERS ###
 # Bu klasörler `npm install` ve `pip install` komutlarıyla yeniden oluşturulabilir.
