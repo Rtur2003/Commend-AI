@@ -334,29 +334,29 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
               </button>
             </form>
 
-            <div className="ad-list">
-              <div className="section-header">
-                <h4>📋 Mevcut Reklamlar ({ads.length})</h4>
+            <div style={{marginTop: '30px'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+                <h4 style={{margin: 0, color: '#18D2BB', fontSize: '1.3rem'}}>📋 Mevcut Reklamlar ({ads.length})</h4>
                 {ads.length > 0 && (
-                  <div className="quick-stats">
-                    <span className="quick-stat active">{activeAdsCount} Aktif</span>
-                    <span className="quick-stat inactive">{inactiveAdsCount} Pasif</span>
+                  <div style={{display: 'flex', gap: '15px'}}>
+                    <span style={{padding: '5px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', background: 'rgba(46, 125, 50, 0.2)', color: '#4CAF50'}}>{activeAdsCount} Aktif</span>
+                    <span style={{padding: '5px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', background: 'rgba(170, 170, 170, 0.2)', color: '#999'}}>{inactiveAdsCount} Pasif</span>
                   </div>
                 )}
               </div>
               
               {ads.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-icon">📭</div>
-                  <h3>Henüz reklam yok</h3>
-                  <p>İlk reklamınızı oluşturmak için yukarıdaki formu kullanın.</p>
+                <div style={{textAlign: 'center', padding: '60px 20px', color: '#999'}}>
+                  <div style={{fontSize: '4rem', marginBottom: '20px', opacity: 0.5}}>📭</div>
+                  <h3 style={{margin: '0 0 10px 0', color: '#ffffff'}}>Henüz reklam yok</h3>
+                  <p style={{margin: 0, opacity: 0.8}}>İlk reklamınızı oluşturmak için yukarıdaki formu kullanın.</p>
                 </div>
               ) : (
-                <div className="ads-grid">
+                <div style={{display: 'grid', gap: '20px'}}>
                   {Object.entries(adsByPosition).map(([position, positionAds]) => (
                     positionAds.length > 0 && (
-                      <div key={position} className="position-group">
-                        <h5 className="position-title">
+                      <div key={position} style={{marginBottom: '30px'}}>
+                        <h5 style={{color: '#18D2BB', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px'}}>
                           {position === 'left' && '⬅️ Sol Taraf Reklamları'}
                           {position === 'right' && '➡️ Sağ Taraf Reklamları'}
                           {position === 'top' && '🔼 Üst Reklamlar (Mobile)'}
@@ -365,53 +365,104 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                           {position === 'sidebar-right' && '📋 Sağ Kenar Çubuğu'}
                           {position === 'fixed-top' && '🔥 Sabit Üst Reklamlar'}
                           {position === 'fixed-bottom' && '🔥 Sabit Alt Reklamlar'}
-                          <span className="position-count">({positionAds.length})</span>
+                          <span style={{background: '#121212', color: '#999', padding: '3px 8px', borderRadius: '12px', fontSize: '0.8rem'}}>({positionAds.length})</span>
                         </h5>
                         {positionAds.map((ad) => (
-                          <motion.div 
+                          <div 
                             key={ad.id} 
-                            className={`ad-item ${ad.is_active ? 'active' : 'inactive'}`}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            style={{
+                              background: 'linear-gradient(135deg, #2a2a2a, #333)',
+                              borderRadius: '15px',
+                              padding: '20px',
+                              border: `2px solid ${ad.is_active ? '#4CAF50' : '#999'}`,
+                              transition: 'all 0.3s ease',
+                              position: 'relative',
+                              opacity: ad.is_active ? 1 : 0.7,
+                              boxShadow: ad.is_active ? '0 0 20px rgba(46, 125, 50, 0.2)' : 'none'
+                            }}
                           >
-                            <div className="ad-header">
-                              <div className="ad-id">#{ad.id}</div>
-                              <div className={`ad-status-badge ${ad.is_active ? 'active' : 'inactive'}`}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                              <div style={{background: '#121212', color: '#999', padding: '5px 10px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold'}}>#{ad.id}</div>
+                              <div style={{
+                                padding: '5px 12px', 
+                                borderRadius: '20px', 
+                                fontSize: '0.8rem', 
+                                fontWeight: 'bold',
+                                background: ad.is_active ? 'rgba(46, 125, 50, 0.2)' : 'rgba(211, 47, 47, 0.2)',
+                                color: ad.is_active ? '#4CAF50' : '#f44336'
+                              }}>
                                 {ad.is_active ? '🟢 Aktif' : '🔴 Pasif'}
                               </div>
                             </div>
                             
-                            <div className="ad-content" dangerouslySetInnerHTML={{ __html: ad.content }} />
+                            <div style={{
+                              background: '#121212', 
+                              padding: '15px', 
+                              borderRadius: '8px', 
+                              margin: '15px 0', 
+                              border: '1px solid #333',
+                              color: '#ffffff'
+                            }} dangerouslySetInnerHTML={{ __html: ad.content }} />
                             
                             {ad.link_url && (
-                              <div className="ad-link">
-                                🔗 <a href={ad.link_url} target="_blank" rel="noopener noreferrer">
+                              <div style={{margin: '10px 0', fontSize: '0.9rem', color: '#999'}}>
+                                🔗 <a href={ad.link_url} target="_blank" rel="noopener noreferrer" style={{color: '#18D2BB', textDecoration: 'none'}}>
                                   {ad.link_url.length > 40 ? ad.link_url.substring(0, 40) + '...' : ad.link_url}
                                 </a>
                               </div>
                             )}
                             
-                            <div className="ad-actions">
+                            <div style={{display: 'flex', gap: '10px', marginTop: '15px', flexWrap: 'wrap'}}>
                               <button 
                                 onClick={() => handleEdit(ad)}
-                                className="edit-button"
+                                style={{
+                                  background: '#18D2BB',
+                                  color: '#121212',
+                                  border: 'none',
+                                  padding: '10px 15px',
+                                  borderRadius: '8px',
+                                  cursor: 'pointer',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.3s ease',
+                                  flex: 1
+                                }}
                               >
                                 ✏️ Düzenle
                               </button>
                               <button 
                                 onClick={() => handleToggle(ad.id)}
-                                className={`toggle-button ${ad.is_active ? 'active' : 'inactive'}`}
+                                style={{
+                                  background: ad.is_active ? 'rgba(211, 47, 47, 0.8)' : 'rgba(46, 125, 50, 0.8)',
+                                  color: 'white',
+                                  border: 'none',
+                                  padding: '10px 15px',
+                                  borderRadius: '8px',
+                                  cursor: 'pointer',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.3s ease',
+                                  flex: 1
+                                }}
                               >
                                 {ad.is_active ? '⏸️ Pasif Yap' : '▶️ Aktif Yap'}
                               </button>
                               <button 
                                 onClick={() => handleDelete(ad.id)} 
-                                className="delete-button"
+                                style={{
+                                  background: '#f44336',
+                                  color: 'white',
+                                  border: 'none',
+                                  padding: '10px 15px',
+                                  borderRadius: '8px',
+                                  cursor: 'pointer',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.3s ease',
+                                  flex: 1
+                                }}
                               >
                                 🗑️ Sil
                               </button>
                             </div>
-                          </motion.div>
+                          </div>
                         ))}
                       </div>
                     )
