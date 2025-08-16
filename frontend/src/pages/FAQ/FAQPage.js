@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import EnhancedSEOHead from '../../shared/components/seo/EnhancedSEOHead';
-import { useLanguage } from '../../contexts/LanguageContext';
+// import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/main.css';
 
 const FAQPage = () => {
