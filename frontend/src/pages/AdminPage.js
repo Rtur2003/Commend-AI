@@ -141,11 +141,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
         </button>
         <button 
           className={`tab-button ${activeTab === 'ads' ? 'active' : ''}`}
-          onClick={() => {
-            console.log('🖱️ Reklam Yönetimi sekmesine tıklandı');
-            setActiveTab('ads');
-            console.log('📊 activeTab set edildi: ads');
-          }}
+          onClick={() => setActiveTab('ads')}
         >
           📢 Reklam Yönetimi
         </button>
@@ -206,7 +202,6 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
             border: '1px solid #333',
             margin: '20px 0'
           }}>
-            {console.log('🎯 Ads section render ediliyor, activeTab:', activeTab, 'ads array:', ads)}
             <form 
               onSubmit={handleSubmit}
               style={{
@@ -470,7 +465,6 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                 </div>
               )}
             </div>
-            {console.log('✅ Ads section sonuna geldi')}
           </div>
         )}
       </motion.div>
@@ -490,51 +484,22 @@ const AdminPage = () => {
   const fetchAdsOnly = async () => {
     try {
       const adsData = await getAds();
-      console.log('🔍 API Response (adsData):', adsData); // Debug log ekledik
-      
       // API response structure ini kontrol et
       if (Array.isArray(adsData)) {
         setAds(adsData);
-        console.log('✅ Backend den veri geldi:', adsData.length, 'adet reklam');
-        if (adsData.length === 0) {
-          console.log('📝 Henüz hiç reklam yok, yeni reklam ekleyebilirsiniz.');
-        }
       } else if (adsData && Array.isArray(adsData.ads)) {
         setAds(adsData.ads);
-        console.log('✅ Backend den veri geldi (nested):', adsData.ads.length, 'adet reklam');
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
-        console.log('✅ Backend den veri geldi (data):', adsData.data.length, 'adet reklam');
       } else {
         console.warn('⚠️ Unexpected API response structure:', adsData);
-        setAds([]); // Boş array set et, test verisi KULLANMA
+        setAds([]);
       }
     } catch (e) {
       console.error("❌ Reklamlar yüklenemedi:", e);
       console.error("❌ Error details:", e.response?.data || e.message);
-      console.warn("🧪 Backend bağlanamıyor, test verisi kullanılıyor...");
-      
-      // Backend bağlanamıyorsa test verisi kullan
-      const testAds = [
-        {
-          id: 1,
-          content: "🎯 Test Reklamı - Premium Üyelik!",
-          link_url: "https://example.com",
-          is_active: true,
-          position: "left",
-          created_at: "2025-01-01"
-        },
-        {
-          id: 2,
-          content: "⚡ Test Reklamı - Hızlı Yorum Üretimi",
-          link_url: "https://test.com",
-          is_active: false,
-          position: "right",
-          created_at: "2025-01-02"
-        }
-      ];
-      setAds(testAds);
-      setError("Backend bağlanamıyor, test verileri gösteriliyor.");
+      setAds([]);
+      setError("Backend'e bağlanılamıyor. Lütfen daha sonra tekrar deneyin.");
     }
   };  
   const fetchAllAdminData = async () => {
@@ -543,68 +508,26 @@ const AdminPage = () => {
         getHistory(),
         getAds()
       ]);
-      console.log('🔍 Admin Data - History:', historyData, 'Ads:', adsData);
       
       setHistory(historyData || []);
       
       // API response structure ini kontrol et (ads için)
       if (Array.isArray(adsData)) {
         setAds(adsData);
-        console.log('✅ Backend den veri geldi:', adsData.length, 'adet reklam');
-        if (adsData.length === 0) {
-          console.log('📝 Henüz hiç reklam yok, yeni reklam ekleyebilirsiniz.');
-        }
       } else if (adsData && Array.isArray(adsData.ads)) {
         setAds(adsData.ads);
-        console.log('✅ Backend den veri geldi (nested):', adsData.ads.length, 'adet reklam');
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
-        console.log('✅ Backend den veri geldi (data):', adsData.data.length, 'adet reklam');
       } else {
         console.warn('⚠️ Unexpected API response structure:', adsData);
-        setAds([]); // Boş array set et, test verisi KULLANMA
+        setAds([]);
       }
     } catch(e) {
       console.error("❌ Yönetici verileri yüklenemedi:", e);
       console.error("❌ Error details:", e.response?.data || e.message);
-      console.warn("🧪 Backend bağlanamıyor, test verileri kullanılıyor...");
-      
-      // Backend bağlanamıyorsa test verileri kullan
-      const testHistory = [
-        { id: 1, comment_text: "Test yorumu 1", video_url: "https://youtube.com/test1", posted_at: "2025-01-01" },
-        { id: 2, comment_text: "Test yorumu 2", video_url: "https://youtube.com/test2", posted_at: "2025-01-02" }
-      ];
-      
-      const testAds = [
-        {
-          id: 1,
-          content: "🎯 Test Reklamı - Premium Üyelik!",
-          link_url: "https://example.com",
-          is_active: true,
-          position: "left",
-          created_at: "2025-01-01"
-        },
-        {
-          id: 2,
-          content: "⚡ Test Reklamı - Hızlı Yorum Üretimi",
-          link_url: "https://test.com",
-          is_active: false,
-          position: "right",
-          created_at: "2025-01-02"
-        },
-        {
-          id: 3,
-          content: "📱 Mobil Test Reklamı",
-          link_url: "https://mobile.com",
-          is_active: true,
-          position: "top",
-          created_at: "2025-01-03"
-        }
-      ];
-      
-      setHistory(testHistory);
-      setAds(testAds);
-      setError("Backend bağlanamıyor, test verileri gösteriliyor.");
+      setHistory([]);
+      setAds([]);
+      setError("Backend'e bağlanılamıyor. Lütfen daha sonra tekrar deneyin.");
     }
   };
 
@@ -635,16 +558,7 @@ const AdminPage = () => {
       await fetchAllAdminData();
     } catch (err) {
       console.error("❌ Admin login failed:", err);
-      console.warn("🧪 Backend login bağlanamıyor, test modu aktifleştiriliyor...");
-      
-      // Backend e bağlanamıyorsa test şifresi kabul et (hem development hem production)
-      if (password === 'test' || password === 'admin') {
-        console.warn('🧪 Test mode: Test şifresi kabul edildi');
-        setIsLoggedIn(true);
-        await fetchAllAdminData();
-      } else {
-        setError('Backend bağlanamıyor. Test şifreleri: "test" veya "admin"');
-      }
+      setError('Giriş başarısız. Lütfen şifrenizi kontrol edin.');
     } finally {
       setIsLoading(false);
     }
