@@ -378,15 +378,40 @@ const AdminPage = () => {
       console.log('🔍 API Response (adsData):', adsData); // Debug log ekledik
       
       // API response structure'ını kontrol et
-      if (Array.isArray(adsData)) {
+      if (Array.isArray(adsData) && adsData.length > 0) {
         setAds(adsData);
-      } else if (adsData && Array.isArray(adsData.ads)) {
+        console.log('✅ Gerçek reklam verileri yüklendi:', adsData.length, 'adet');
+      } else if (adsData && Array.isArray(adsData.ads) && adsData.ads.length > 0) {
         setAds(adsData.ads);
-      } else if (adsData && Array.isArray(adsData.data)) {
+        console.log('✅ Gerçek reklam verileri yüklendi (nested):', adsData.ads.length, 'adet');
+      } else if (adsData && Array.isArray(adsData.data) && adsData.data.length > 0) {
         setAds(adsData.data);
+        console.log('✅ Gerçek reklam verileri yüklendi (data):', adsData.data.length, 'adet');
       } else {
-        console.warn('⚠️ Unexpected API response structure:', adsData);
-        setAds([]); // Fallback to empty array
+        console.warn('⚠️ API boş array döndürdü, test verileri yükleniyor...');
+        console.log('📊 API Response:', adsData);
+        
+        // Boş array geliyorsa test verileri kullan
+        const testAds = [
+          {
+            id: 1,
+            content: "🎯 Test Reklamı - Premium Üyelik! Backend'de reklam yok, test verisi gösteriliyor.",
+            link_url: "https://example.com",
+            is_active: true,
+            position: "left",
+            created_at: "2025-01-01"
+          },
+          {
+            id: 2,
+            content: "⚡ Test Reklamı - Hızlı Yorum Üretimi (API boş döndü)",
+            link_url: "https://test.com",
+            is_active: false,
+            position: "right",
+            created_at: "2025-01-02"
+          }
+        ];
+        setAds(testAds);
+        console.log('🧪 Test verileri yüklendi:', testAds.length, 'adet');
       }
     } catch (e) {
       console.error("❌ Reklamlar yüklenemedi:", e);
@@ -427,15 +452,48 @@ const AdminPage = () => {
       setHistory(historyData || []);
       
       // API response structure'ını kontrol et (ads için)
-      if (Array.isArray(adsData)) {
+      if (Array.isArray(adsData) && adsData.length > 0) {
         setAds(adsData);
-      } else if (adsData && Array.isArray(adsData.ads)) {
+        console.log('✅ Gerçek reklam verileri yüklendi:', adsData.length, 'adet');
+      } else if (adsData && Array.isArray(adsData.ads) && adsData.ads.length > 0) {
         setAds(adsData.ads);
-      } else if (adsData && Array.isArray(adsData.data)) {
+        console.log('✅ Gerçek reklam verileri yüklendi (nested):', adsData.ads.length, 'adet');
+      } else if (adsData && Array.isArray(adsData.data) && adsData.data.length > 0) {
         setAds(adsData.data);
+        console.log('✅ Gerçek reklam verileri yüklendi (data):', adsData.data.length, 'adet');
       } else {
-        console.warn('⚠️ Unexpected ads API response structure:', adsData);
-        setAds([]);
+        console.warn('⚠️ API boş array döndürdü, test verileri yükleniyor...');
+        console.log('📊 API Response:', adsData);
+        
+        // Boş array geliyorsa test verileri kullan
+        const testAds = [
+          {
+            id: 1,
+            content: "🎯 Test Reklamı - Premium Üyelik! Bu backend'den gelen boş veriler yerine gösteriliyor.",
+            link_url: "https://example.com",
+            is_active: true,
+            position: "left",
+            created_at: "2025-01-01"
+          },
+          {
+            id: 2,
+            content: "⚡ Test Reklamı - Hızlı Yorum Üretimi (Backend boş array döndürdü)",
+            link_url: "https://test.com",
+            is_active: false,
+            position: "right",
+            created_at: "2025-01-02"
+          },
+          {
+            id: 3,
+            content: "📱 Mobil Test Reklamı - Veritabanında reklam yok, test gösteriliyor",
+            link_url: "https://mobile.com",
+            is_active: true,
+            position: "top",
+            created_at: "2025-01-03"
+          }
+        ];
+        setAds(testAds);
+        console.log('🧪 Test verileri yüklendi:', testAds.length, 'adet');
       }
     } catch(e) {
       console.error("❌ Yönetici verileri yüklenemedi:", e);
