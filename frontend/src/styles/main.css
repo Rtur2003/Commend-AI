@@ -879,7 +879,7 @@ button:disabled {
 
 /* Ads Section */
 .ads-section {
-  appearance: 30px;
+  padding: 30px;
 }
 
 /* Form Improvements */

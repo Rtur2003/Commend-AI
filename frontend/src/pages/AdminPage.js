@@ -200,11 +200,9 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
         {activeTab === 'ads' && (
           <div className="ads-section">
             {console.log('🎯 Ads section render ediliyor, activeTab:', activeTab, 'ads array:', ads)}
-            <motion.form 
+            <form 
               onSubmit={handleSubmit}
               className="ad-form"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
             >
               <div className="form-header">
                 <h4>{editingId ? `✏️ Reklam #${editingId} Düzenleniyor` : '➕ Yeni Reklam Ekle'}</h4>
@@ -281,7 +279,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                   editingId ? '💾 Değişiklikleri Kaydet' : '✨ Reklamı Oluştur'
                 )}
               </button>
-            </motion.form>
+            </form>
 
             <div className="ad-list">
               <div className="section-header">
