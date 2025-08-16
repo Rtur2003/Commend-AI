@@ -30,7 +30,6 @@ function HomePage() {
       const historyData = await getHistory();
       setHistory(historyData);
     } catch (error) {
-      console.error("Error fetching history!", error);
       setError(t('errorHistoryLoad'));
     }
   };

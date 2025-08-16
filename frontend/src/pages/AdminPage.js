@@ -24,10 +24,8 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
     try {
       if (editingId) {
         await updateAd(editingId, formData);
-        console.log('✅ Reklam güncellendi:', editingId);
       } else {
-        const result = await createAd(formData);
-        console.log('✅ Yeni reklam oluşturuldu:', result);
+        await createAd(formData);
       }
       resetForm();
       await fetchAdsData();
@@ -36,7 +34,6 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
       setError(''); // Önceki hataları temizle
       alert(editingId ? 'Reklam başarıyla güncellendi!' : 'Yeni reklam başarıyla oluşturuldu!');
     } catch (err) {
-      console.error('❌ Reklam işlemi başarısız:', err);
       setError(err.response?.data?.message || err.message || 'İşlem başarısız oldu');
     } finally {
       setIsLoading(false);
@@ -257,7 +254,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                     name="link_url"
                     value={formData.link_url}
                     onChange={handleChange}
-                    placeholder="https://example.com"
+                    placeholder="https://yourwebsite.com"
                     style={{
                       width: '100%',
                       padding: '12px',
@@ -492,14 +489,11 @@ const AdminPage = () => {
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
       } else {
-        console.warn('⚠️ Unexpected API response structure:', adsData);
         setAds([]);
       }
     } catch (e) {
-      console.error("❌ Reklamlar yüklenemedi:", e);
-      console.error("❌ Error details:", e.response?.data || e.message);
       setAds([]);
-      setError("Backend'e bağlanılamıyor. Lütfen daha sonra tekrar deneyin.");
+      setError("Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.");
     }
   };  
   const fetchAllAdminData = async () => {
@@ -519,15 +513,12 @@ const AdminPage = () => {
       } else if (adsData && Array.isArray(adsData.data)) {
         setAds(adsData.data);
       } else {
-        console.warn('⚠️ Unexpected API response structure:', adsData);
         setAds([]);
       }
     } catch(e) {
-      console.error("❌ Yönetici verileri yüklenemedi:", e);
-      console.error("❌ Error details:", e.response?.data || e.message);
       setHistory([]);
       setAds([]);
-      setError("Backend'e bağlanılamıyor. Lütfen daha sonra tekrar deneyin.");
+      setError("Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.");
     }
   };
 
@@ -540,7 +531,7 @@ const AdminPage = () => {
           await fetchAllAdminData();
         }
       } catch(e) {
-        console.error("Yetki kontrolü başarısız:", e);
+        // Auth check failed silently
       } finally {
         setAuthChecked(true);
       }
@@ -557,7 +548,6 @@ const AdminPage = () => {
       setIsLoggedIn(true);
       await fetchAllAdminData();
     } catch (err) {
-      console.error("❌ Admin login failed:", err);
       setError('Giriş başarısız. Lütfen şifrenizi kontrol edin.');
     } finally {
       setIsLoading(false);
