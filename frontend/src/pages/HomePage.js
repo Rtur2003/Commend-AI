@@ -166,7 +166,6 @@ function HomePage() {
         animate={{ opacity: 1, y: 0 }}  // Bitiş durumu: görünür ve normal pozisyonunda
         transition={{ duration: 0.6 }}   // Animasyon süresi
         >
-      <AdBanner position="fixed-top" />
       <header>
         <h1>{t('pageTitle')}</h1>
         {!error && <p className="status-message">{statusMessage}</p>}
@@ -181,7 +180,6 @@ function HomePage() {
           </div>
         )}
       </header>
-      <AdBanner position="top" />
       <main>
         <CommentForm 
           videoUrl={videoUrl}
@@ -203,20 +201,16 @@ function HomePage() {
           />
         )}
         
-        <AdBanner position="bottom" />
-
         <HistoryPanel 
           history={history}
           handleUseHistoryItem={handleUseHistoryItem}
         />
       </main>
       
-      {/* Sidebar Ads - Only visible on desktop */}
-      <AdBanner position="sidebar-left" />
-      <AdBanner position="sidebar-right" />
-      
-      {/* Fixed bottom ads */}
-      <AdBanner position="fixed-bottom" />
+      {/* New 3-Position Ad System */}
+      <AdBanner position="left" />
+      <AdBanner position="right" />
+      <AdBanner position="bottom" />
     </motion.div>
     </>
   );

@@ -97,16 +97,50 @@ def get_ads():
         } for ad in ads
     ])
 
+def validate_ad_content(content, position):
+    """Validates ad content size and format"""
+    if not content or len(content.strip()) == 0:
+        return False, "Ad content cannot be empty"
+    
+    # Basic size limits based on position
+    content_length = len(content)
+    if position in ['left', 'right']:
+        if content_length > 2000:  # Reasonable limit for sidebar content
+            return False, "Sidebar ad content is too large. Please keep it concise and within size limits."
+    elif position == 'bottom':
+        if content_length > 1000:  # Smaller limit for banner
+            return False, "Bottom banner content is too large. Please use minimal text for banners."
+    
+    # Check for valid positions
+    valid_positions = ['left', 'right', 'bottom']
+    if position not in valid_positions:
+        return False, f"Invalid position. Must be one of: {', '.join(valid_positions)}"
+    
+    return True, "Content is valid"
+
 @admin_routes.route('/ads', methods=['POST'])
 @admin_required
 def create_ad():
     """Yeni bir reklam oluşturur."""
     data = request.json
+    
+    content = data.get('content', '').strip()
+    position = data.get('position', 'left')
+    
+    # Validate content
+    is_valid, message = validate_ad_content(content, position)
+    if not is_valid:
+        return jsonify({
+            "status": "error", 
+            "message": message,
+            "user_friendly": True
+        }), 400
+    
     new_ad = Ad(
-        content=data.get('content'),
+        content=content,
         link_url=data.get('link_url'),
         is_active=data.get('is_active', True),
-        position=data.get('position', 'left')
+        position=position
     )
     db.session.add(new_ad)
     db.session.commit()
@@ -119,9 +153,22 @@ def update_ad(ad_id):
     ad = Ad.query.get_or_404(ad_id)
     data = request.json
     
-    ad.content = data.get('content', ad.content)
+    content = data.get('content', ad.content).strip()
+    position = data.get('position', ad.position)
+    
+    # Validate content if it's being updated
+    if 'content' in data or 'position' in data:
+        is_valid, message = validate_ad_content(content, position)
+        if not is_valid:
+            return jsonify({
+                "status": "error", 
+                "message": message,
+                "user_friendly": True
+            }), 400
+    
+    ad.content = content
     ad.link_url = data.get('link_url', ad.link_url)
-    ad.position = data.get('position', ad.position)
+    ad.position = position
     if 'is_active' in data:
         ad.is_active = data['is_active']
     

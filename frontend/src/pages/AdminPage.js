@@ -82,12 +82,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
   const adsByPosition = {
     left: ads.filter(ad => ad.position === 'left'),
     right: ads.filter(ad => ad.position === 'right'),
-    top: ads.filter(ad => ad.position === 'top'),
-    bottom: ads.filter(ad => ad.position === 'bottom'),
-    'sidebar-left': ads.filter(ad => ad.position === 'sidebar-left'),
-    'sidebar-right': ads.filter(ad => ad.position === 'sidebar-right'),
-    'fixed-top': ads.filter(ad => ad.position === 'fixed-top'),
-    'fixed-bottom': ads.filter(ad => ad.position === 'fixed-bottom')
+    bottom: ads.filter(ad => ad.position === 'bottom')
   };
   return (
     <motion.div
@@ -225,6 +220,23 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
               
               {error && <div className="error-message">{error}</div>}
 
+              {/* Content Size Guidelines */}
+              <div style={{
+                background: 'rgba(24, 210, 187, 0.1)',
+                border: '1px solid #18D2BB',
+                borderRadius: '8px',
+                padding: '15px',
+                marginBottom: '20px'
+              }}>
+                <h4 style={{color: '#18D2BB', margin: '0 0 10px 0', fontSize: '1rem'}}>⚠️ Content Size Requirements</h4>
+                <ul style={{margin: 0, paddingLeft: '20px', color: '#ccc', fontSize: '0.9rem'}}>
+                  <li><strong>Left/Right Sidebar:</strong> Max 280x600px - Keep content concise and vertical</li>
+                  <li><strong>Bottom Banner:</strong> Max 600x100px - Use horizontal layout, minimal text</li>
+                  <li><strong>Important:</strong> Content exceeding dimensions will show warning and reduced opacity</li>
+                  <li><strong>Best Practice:</strong> Use simple HTML with inline styles, avoid large images</li>
+                </ul>
+              </div>
+
               <div style={{display: 'grid', gap: '20px', marginBottom: '25px'}}>
                 <div style={{marginBottom: '20px'}}>
                   <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>🎨 Reklam İçeriği (HTML/Text)</label>
@@ -232,7 +244,7 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                     name="content"
                     value={formData.content}
                     onChange={handleChange}
-                    placeholder="Reklam içeriğinizi buraya yazın..."
+                    placeholder="Example: <div style='text-align: center; color: white;'><h3>Your Brand</h3><p>Your message here</p></div>"
                     required
                     style={{
                       width: '100%',
@@ -242,19 +254,23 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                       backgroundColor: '#2a2a2a',
                       color: '#ffffff',
                       fontSize: '1rem',
-                      minHeight: '100px',
-                      resize: 'vertical'
+                      minHeight: '120px',
+                      resize: 'vertical',
+                      fontFamily: 'monospace'
                     }}
                   />
+                  <small style={{color: '#999', fontSize: '0.8rem', marginTop: '5px', display: 'block'}}>
+                    💡 Tip: Keep content simple and within size limits. Use inline CSS for styling.
+                  </small>
                 </div>
                 <div style={{marginBottom: '20px'}}>
-                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>🔗 Reklam Linki (URL)</label>
+                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>🔗 Reklam Linki (URL) - Optional</label>
                   <input 
                     type="url"
                     name="link_url"
                     value={formData.link_url}
                     onChange={handleChange}
-                    placeholder="https://yourwebsite.com"
+                    placeholder="https://yourwebsite.com (optional)"
                     style={{
                       width: '100%',
                       padding: '12px',
@@ -265,13 +281,17 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                       fontSize: '1rem'
                     }}
                   />
+                  <small style={{color: '#999', fontSize: '0.8rem', marginTop: '5px', display: 'block'}}>
+                    Leave empty if ad should not be clickable
+                  </small>
                 </div>
                 <div style={{marginBottom: '20px'}}>
-                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>📍 Pozisyon</label>
+                  <label style={{color: '#18D2BB', fontWeight: 'bold', marginBottom: '8px', display: 'block'}}>📍 Ad Position</label>
                   <select 
                     name="position"
                     value={formData.position}
                     onChange={handleChange}
+                    required
                     style={{
                       width: '100%',
                       padding: '12px',
@@ -282,21 +302,13 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                       fontSize: '1rem'
                     }}
                   >
-                    <optgroup label="📱 Mobil Pozisyonlar">
-                      <option value="top">📱 Üst Kısım (Mobil)</option>
-                      <option value="bottom">📱 Alt Kısım (Mobil)</option>
-                    </optgroup>
-                    <optgroup label="💻 Desktop Pozisyonlar">
-                      <option value="left">💻 Sol Taraf (Desktop)</option>
-                      <option value="right">💻 Sağ Taraf (Desktop)</option>
-                      <option value="sidebar-left">💻 Sol Kenar Çubuğu</option>
-                      <option value="sidebar-right">💻 Sağ Kenar Çubuğu</option>
-                    </optgroup>
-                    <optgroup label="🔥 Sabit Pozisyonlar">
-                      <option value="fixed-top">🔥 Sabit Üst (Tüm Cihazlar)</option>
-                      <option value="fixed-bottom">🔥 Sabit Alt (Tüm Cihazlar)</option>
-                    </optgroup>
+                    <option value="left">👈 Left Sidebar (280×600px) - Desktop Only</option>
+                    <option value="right">👉 Right Sidebar (280×600px) - Desktop Only</option>
+                    <option value="bottom">👇 Bottom Banner (600×100px) - Mobile + Desktop</option>
                   </select>
+                  <small style={{color: '#999', fontSize: '0.8rem', marginTop: '5px', display: 'block'}}>
+                    Mobile devices only show bottom banner ads
+                  </small>
                 </div>
               </div>
               <button 
@@ -349,14 +361,9 @@ const AdminDashboard = ({ history, ads, fetchAdsData, handleLogout }) => {
                     positionAds.length > 0 && (
                       <div key={position} style={{marginBottom: '30px'}}>
                         <h5 style={{color: '#18D2BB', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px'}}>
-                          {position === 'left' && '⬅️ Sol Taraf Reklamları'}
-                          {position === 'right' && '➡️ Sağ Taraf Reklamları'}
-                          {position === 'top' && '🔼 Üst Reklamlar (Mobile)'}
-                          {position === 'bottom' && '🔽 Alt Reklamlar (Mobile)'}
-                          {position === 'sidebar-left' && '📋 Sol Kenar Çubuğu'}
-                          {position === 'sidebar-right' && '📋 Sağ Kenar Çubuğu'}
-                          {position === 'fixed-top' && '🔥 Sabit Üst Reklamlar'}
-                          {position === 'fixed-bottom' && '🔥 Sabit Alt Reklamlar'}
+                          {position === 'left' && '👈 Sol Sidebar (280x600px - Desktop Only)'}
+                          {position === 'right' && '👉 Sağ Sidebar (280x600px - Desktop Only)'}
+                          {position === 'bottom' && '👇 Alt Banner (600x100px - Mobil+Desktop)'}
                           <span style={{background: '#121212', color: '#999', padding: '3px 8px', borderRadius: '12px', fontSize: '0.8rem'}}>({positionAds.length})</span>
                         </h5>
                         {positionAds.map((ad) => (
