@@ -25,14 +25,14 @@ function HomePage() {
   
   
   // --- LOGIC / FUNCTIONS ---
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     try {
       const historyData = await getHistory();
       setHistory(historyData);
     } catch (error) {
       setError(t('errorHistoryLoad'));
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchHistory();
