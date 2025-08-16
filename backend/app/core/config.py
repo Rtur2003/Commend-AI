@@ -26,8 +26,9 @@ class Config:
         return {
             "author": "Hasan Arthur Altuntaş",
             "project": "Commend AI",
-            "version": "1.0.0",
-            "created": "2025"
+            "version": "1.1.0",
+            "created": "2025",
+            "changelog": "Optimized codebase, removed unnecessary files, improved performance"
         }
 
     # --- VERİTABANI AYARLARI ---
